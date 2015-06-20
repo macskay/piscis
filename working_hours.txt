@@ -1,0 +1,54 @@
+Friday, 06/12/15, 2h, 8 PM - 10 PM
+ - Research (Monitor, Licenses)
+ - Decision on programming-language (engine-comparison)
+ 
+Saturday, 06/13/15, 4h, 10 AM - 2 PM
+ - Initial work
+ - Project design
+ - Project setup
+ - First windows
+ 
+Sunday, 06/14/15, 2h, 12 PM - 2 PM
+ - Window-Design 
+  - Window Layout
+  - Screens Addition
+  - ComboBox Addition
+  
+
+Sunday, 06/14/15 & Monday, 06/15/15, 2h, 11 PM - 1 AM
+ - Window-Design
+  - Combo Box Functionality
+  - Canvas Addition
+  
+Tuesday, 06/16/15, 2h, 1 PM - 3 PM
+ - Window-Improvements
+  - Adding of a second window on another monitor
+  - Widget-Placement
+  - Size-adjustments for the fishtank canvas
+  
+Wednesday, 06/17/15, 3h, 8 PM - 11 PM
+ - Window-Design
+  - JFreeChart dependency
+  - Compass implementation
+  - Slider-Hookup
+  - Stimuli-Loop advancement
+  
+Friday, 06/18/15, 2h, 8 PM - 10 PM
+ - Major-Redesign
+  - Because of compatibility and dependency issues change to a new programming-language (Python)
+  - Project setup in Python
+  - GitHub Update to represent Python
+  - Designing the Windows in a GUI Designer called PyGubu
+  - Adding Canvases to the new "tab-design"
+  - Copying Canvases to a "all-screen"-tab
+  
+Friday, 06/18/15 & Saturday, 06/20/15, 4h, 11:30 PM - 3 AM
+ - Continuation of Major-Redesign
+  - Added Color-Changer Buttons for Background and Stimuli-Loop
+  - Added Sliders
+  - Added Fishbox-Outlines
+  - Hooking up the copy canvases
+  - Hooking up Color-Changer Button funtionality
+  
+  
+Total: 21h
