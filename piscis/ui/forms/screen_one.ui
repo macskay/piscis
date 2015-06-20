@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="ttk.Labelframe" id="root">
+    <property name="height">200</property>
+    <property name="labelanchor">n</property>
+    <property name="relief">sunken</property>
+    <property name="text" translatable="yes">Screen 1</property>
+    <property name="width">200</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="propagate">True</property>
+      <property name="row">0</property>
+      <property name="rowspan">1</property>
+      <columns>
+        <column id="0">
+          <property name="weight">0</property>
+        </column>
+        <column id="1">
+          <property name="weight">0</property>
+        </column>
+      </columns>
+      <rows>
+        <row id="0">
+          <property name="minsize">0</property>
+          <property name="pad">0</property>
+        </row>
+      </rows>
+    </layout>
+    <child>
+      <object class="tk.Canvas" id="canvas">
+        <property name="closeenough">0</property>
+        <property name="confine">false</property>
+        <property name="height">450</property>
+        <property name="width">700</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="columnspan">2</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+          <property name="rowspan">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="scale_label">
+        <property name="text" translatable="yes">Scale</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="scale_slider">
+        <property name="command">on_scale_slider</property>
+        <property name="length">300</property>
+        <property name="orient">horizontal</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="speed_label">
+        <property name="text" translatable="yes">Speed</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Scale" id="speed_slider">
+        <property name="command">on_speed_slider</property>
+        <property name="length">300</property>
+        <property name="orient">horizontal</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="background">
+        <property name="command">on_background</property>
+        <property name="text" translatable="yes">Background-Color</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="stimuli">
+        <property name="command">on_stimuli</property>
+        <property name="text" translatable="yes">Stimuli-Color</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>
