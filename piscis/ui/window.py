@@ -130,8 +130,8 @@ class Screen(object):
         screen.create_line(start_x, height - start_y, width - start_x, height - start_y, fill="#CCCCCC")
 
     def get_startx_starty_horizontal(self, screen):
-        return screen.winfo_reqwidth()* HORIZONTAL_X_MARGIN, \
-               screen.winfo_reqheight()* HORIZONTAL_Y_MARGIN
+        return screen.winfo_reqwidth()*HORIZONTAL_X_MARGIN, \
+               screen.winfo_reqheight()*HORIZONTAL_Y_MARGIN
 
     def draw_vertical_borders(self, height, screen, width):
         start_x, start_y = self.get_startx_starty_vertical(screen)
