@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="ttk.Frame" id="main_frame">
+    <property name="height">1080</property>
+    <property name="width">1920</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="propagate">False</property>
+      <property name="row">0</property>
+    </layout>
+    <child>
+      <object class="ttk.Frame" id="00">
+        <property name="height">88</property>
+        <property name="width">0</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="01">
+        <property name="height">88</property>
+        <property name="width">0</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="02">
+        <property name="height">88</property>
+        <property name="width">0</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="03">
+        <property name="height">88</property>
+        <property name="width">0</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="10">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="11">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="screen_one">
+            <property name="background">#0080c0</property>
+            <property name="height">450</property>
+            <property name="highlightthickness">0</property>
+            <property name="selectborderwidth">0</property>
+            <property name="width">700</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="12">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="screen_two">
+            <property name="background">#0080c0</property>
+            <property name="height">450</property>
+            <property name="highlightthickness">0</property>
+            <property name="insertontime">100</property>
+            <property name="width">700</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="13">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="20">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="21">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="screen_three">
+            <property name="background">#0080c0</property>
+            <property name="height">450</property>
+            <property name="highlightthickness">0</property>
+            <property name="relief">flat</property>
+            <property name="width">700</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="ipadx">0</property>
+              <property name="padx">0</property>
+              <property name="pady">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="22">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object class="tk.Canvas" id="screen_four">
+            <property name="background">#0080c0</property>
+            <property name="height">450</property>
+            <property name="highlightthickness">0</property>
+            <property name="relief">ridge</property>
+            <property name="width">700</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="padx">0</property>
+              <property name="pady">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="23">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="30">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="31">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="32">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="33">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+  </object>
+</interface>
