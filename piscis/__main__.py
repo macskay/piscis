@@ -7,4 +7,4 @@ if __name__ == '__main__':
     root = Tk()
     root.resizable(0, 0)
     window = MainWindow(root)
-    window.run()
+    root.mainloop()

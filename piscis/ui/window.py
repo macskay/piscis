@@ -1,9 +1,10 @@
 #-*- encoding: utf-8 -*-
 
 from os import path
-from tkinter import messagebox, Frame, Label, Button, Canvas
+from tkinter import messagebox, Frame, Label, Button, Canvas, Toplevel, Tk
 from tkinter.colorchooser import askcolor
 from tkinter.messagebox import showinfo
+from tkinter.ttk import Style
 from pygubu import Builder, TkApplication
 
 VERTICAL_Y_MARGIN = 0.15
@@ -16,15 +17,19 @@ HORIZONTAL_X_MARGIN = 0.09
 
 TITLE_FONT = {"Helvetica", 18, "bold"}
 
+SCRIPT_DIR = path.dirname(path.abspath(__file__))
+
 class MainWindow(TkApplication):
     def _create_ui(self):
         self.builder = Builder()
-        self.builder.add_from_file(path.join(".", "forms", "window.ui"))
+        file = path.join(SCRIPT_DIR, "forms", "window.ui")
+        self.builder.add_from_file(file)
 
         self.main_window = self.setup_window()
         self.main_menu = self.setup_menu()
+        self.second_monitor = self.setup_second_monitor()
         self.setup_screens()
-
+        
         self.builder.connect_callbacks(self)
 
     def setup_window(self):
@@ -38,26 +43,26 @@ class MainWindow(TkApplication):
 
     def setup_screens(self):
         all_screens = self.setup_all_screens()
-        self.setup_screen_one(all_screens)
-        self.setup_screen_two(all_screens)
-        self.setup_screen_three(all_screens)
-        self.setup_screen_four(all_screens)
+        self.setup_screen_one(all_screens, self.second_monitor)
+        self.setup_screen_two(all_screens, self.second_monitor)
+        self.setup_screen_three(all_screens, self.second_monitor)
+        self.setup_screen_four(all_screens, self.second_monitor)
 
-    def setup_screen_one(self, all_screens):
+    def setup_screen_one(self, all_screens, window):
         screen_one = self.builder.get_object('screenone_text', self.master)
-        return Screen(screen_one, all_screens.screen_one)
+        return Screen(screen_one, all_screens.screen_one, window.screen_one)
 
-    def setup_screen_two(self, all_screens):
+    def setup_screen_two(self, all_screens, window):
         screen_two = self.builder.get_object('screentwo_text', self.master)
-        return Screen(screen_two, all_screens.screen_two)
+        return Screen(screen_two, all_screens.screen_two, window.screen_two)
 
-    def setup_screen_three(self, all_screens):
+    def setup_screen_three(self, all_screens, window):
         screen_three = self.builder.get_object('screenthree_text', self.master)
-        return Screen(screen_three, all_screens.screen_three)
+        return Screen(screen_three, all_screens.screen_three, window.screen_three)
 
-    def setup_screen_four(self, all_screens):
+    def setup_screen_four(self, all_screens, window):
         screen_four = self.builder.get_object('screenfour_text', self.master)
-        return Screen(screen_four, all_screens.screen_four)
+        return Screen(screen_four, all_screens.screen_four, window.screen_four)
 
     def setup_all_screens(self):
         all_screens = self.builder.get_object('allscreens_text', self.master)
@@ -69,13 +74,47 @@ class MainWindow(TkApplication):
     def on_exit(self):
         self.master.quit()
 
+    def on_fullscreen(self):
+        self.second_monitor.set_fullscreen()
+
+    def change_fullscreen_bg(self):
+        new_color = askcolor(color=self.second_monitor.bg_color, title="Change Background-Color")[1]
+        self.second_monitor.change_background_color(new_color)
+
+    def setup_second_monitor(self):
+        return SecondScreen(Toplevel())
+
+class SecondScreen(object):
+    def __init__(self, root):
+        self.root = root
+        self.builder = Builder()
+        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "second_screen.ui"))
+
+        self.bg_color = '#3F8080'
+
+        self.style = Style()
+        self.change_background_color(self.bg_color)
+        self.main_frame = self.builder.get_object('main_frame', self.root)
+
+        self.screen_one = self.builder.get_object('screen_one', self.root)
+        self.screen_two = self.builder.get_object('screen_two', self.root)
+        self.screen_three = self.builder.get_object('screen_three', self.root)
+        self.screen_four = self.builder.get_object('screen_four', self.root)
+
+    def set_fullscreen(self):
+        w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
+        self.root.overrideredirect(1)
+        self.root.geometry("%dx%d+0+0" % (w, h))
+
+    def change_background_color(self, color):
+        self.bg_color = color
+        self.style.configure('TFrame', background=color)
 
 class AllScreens(object):
     def __init__(self, root):
         self.root = root
         self.builder = Builder()
-        self.builder.add_from_file(path.join(".", "forms", "all_screens.ui"))
-
+        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "all_screens.ui"))
         self.screen_one = self.builder.get_object('screen_one', self.root)
         self.screen_two = self.builder.get_object('screen_two', self.root)
         self.screen_three = self.builder.get_object('screen_three', self.root)
@@ -90,12 +129,13 @@ class AllScreens(object):
 class Screen(object):
     CANVAS_DEFAULT_BACKGROUND = "#3F8080"
 
-    def __init__(self, root, parent_canvas):
+    def __init__(self, root, parent_canvas, window_canvas):
         self.root = root
         self.parent_canvas = parent_canvas
+        self.window_canvas = window_canvas
         self.canvas = None
         self.builder = Builder()
-        self.builder.add_from_file(path.join(".", "forms", "screen_one.ui"))
+        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "screen_one.ui"))
         self.setup_screen()
         self.builder.connect_callbacks(self)
 
@@ -113,11 +153,13 @@ class Screen(object):
     def change_canvas_background(self, value):
         self.canvas.configure(background=value)
         self.parent_canvas.configure(background=value)
+        self.window_canvas.configure(background=value)
 
     def setup_fishbox(self):
         # noinspection PyTypeChecker
         self.setup_fishbox_canvas(self.canvas)
         self.setup_fishbox_canvas(self.parent_canvas)
+        self.setup_fishbox_canvas(self.window_canvas)
 
     def setup_fishbox_canvas(self, screen):
         width, height = screen.winfo_reqwidth(), screen.winfo_reqheight()
