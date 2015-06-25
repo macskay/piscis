@@ -1,6 +1,7 @@
 #-*- encoding: utf-8 -*-
 
 from os import path
+import random
 from tkinter import messagebox, Frame, Label, Button, Canvas, Toplevel, Tk
 from tkinter.colorchooser import askcolor
 from tkinter.messagebox import showinfo
@@ -128,16 +129,28 @@ class AllScreens(object):
 
 class Screen(object):
     CANVAS_DEFAULT_BACKGROUND = "#3F8080"
+    PREDATOR_COLOR = "#FFFFFF"
 
     def __init__(self, root, parent_canvas, window_canvas):
         self.root = root
+
         self.parent_canvas = parent_canvas
         self.window_canvas = window_canvas
         self.canvas = None
+
+        self.predator_canvas = None
+        self.predator_parent_canvas = None
+        self.predator_window_canvas = None
+
+        self.speed_slider_value = 0
+        self.scale_slider_value = 0
+
         self.builder = Builder()
         self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "screen_one.ui"))
         self.setup_screen()
         self.builder.connect_callbacks(self)
+
+        self.root.after(40, self.update)
 
     def setup_screen(self):
         self.setup_canvas()
@@ -148,12 +161,16 @@ class Screen(object):
 
     def setup_canvas(self):
         self.canvas = self.builder.get_object('canvas', self.root)
-        self.change_canvas_background(self.CANVAS_DEFAULT_BACKGROUND)
 
     def change_canvas_background(self, value):
         self.canvas.configure(background=value)
         self.parent_canvas.configure(background=value)
         self.window_canvas.configure(background=value)
+
+    def setup_fishbox_canvas(self, screen):
+        width, height = screen.winfo_reqwidth(), screen.winfo_reqheight()
+        self.draw_horizontal_borders(height, screen, width)
+        self.draw_vertical_borders(height, screen, width)
 
     def setup_fishbox(self):
         # noinspection PyTypeChecker
@@ -161,13 +178,9 @@ class Screen(object):
         self.setup_fishbox_canvas(self.parent_canvas)
         self.setup_fishbox_canvas(self.window_canvas)
 
-    def setup_fishbox_canvas(self, screen):
-        width, height = screen.winfo_reqwidth(), screen.winfo_reqheight()
-        self.draw_horizontal_borders(height, screen, width)
-        self.draw_vertical_borders(height, screen, width)
-
     def draw_horizontal_borders(self, height, screen, width):
         start_x, start_y = self.get_startx_starty_horizontal(screen)
+        self.change_canvas_background(self.CANVAS_DEFAULT_BACKGROUND)
         screen.create_line(start_x, start_y, width - start_x, start_y, fill="#CCCCCC")
         screen.create_line(start_x, height - start_y, width - start_x, height - start_y, fill="#CCCCCC")
 
@@ -194,17 +207,56 @@ class Screen(object):
 
     def setup_buttons(self):
         self.builder.get_object('background', self.root)
-        self.builder.get_object('stimuli', self.root)
+        self.builder.get_object('stimuli_color', self.root)
+        self.builder.get_object('generate', self.root)
 
     def on_background(self):
         new_bg_color = askcolor(color=self.CANVAS_DEFAULT_BACKGROUND, title="Change Background-Color")[1]
         self.change_canvas_background(new_bg_color)
 
-    def on_stimuli(self):
-        askcolor(color="#FFFFFF", title="Change Stimuli-Color")
+    def on_stimuli_color(self):
+        self.PREDATOR_COLOR = askcolor(color=self.PREDATOR_COLOR, title="Change Stimuli-Color")[1]
 
     def on_speed_slider(self, value):
-        print(str(value))
+        self.speed_slider_value = float(value)
 
     def on_scale_slider(self, value):
-        print(str(value))
+        self.scale_slider_value = float(value)
+
+    def on_generate(self):
+        self.reset_predators()
+        self.create_predators()
+
+    def reset_predators(self):
+        self.canvas.delete(self.predator_canvas)
+        self.parent_canvas.delete(self.predator_parent_canvas)
+        self.window_canvas.delete(self.predator_window_canvas)
+
+    def create_predators(self):
+        x, y = random.random(), random.random()
+
+        self.predator_canvas = self.draw_predator(x, y, self.canvas)
+        self.predator_parent_canvas = self.draw_predator(x, y, self.parent_canvas)
+        self.predator_window_canvas = self.draw_predator(x, y, self.window_canvas)
+
+    def draw_predator(self, x, y, canvas):
+        width, height = canvas.winfo_width(), canvas.winfo_height()
+        begin_x, begin_y, end_x, end_y = self.calculate_coordinates(height, width, x, y)
+
+        return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.PREDATOR_COLOR,
+                                  outline=self.PREDATOR_COLOR)
+
+    def calculate_coordinates(self, height, width, x, y):
+        begin_x, begin_y = x * width, y * height
+        end_x, end_y = x * width + width * self.scale_slider_value, y * height + width * self.scale_slider_value
+        pred_width, pred_height = end_x - begin_x, end_y - begin_y
+
+        begin_x -= pred_width // 2
+        begin_y -= pred_height // 2
+
+        end_x -= pred_width // 2
+        end_y -= pred_height // 2
+        return begin_x, begin_y, end_x, end_y
+
+    def update(self):
+        pass

@@ -34,7 +34,7 @@
         <property name="width">700</property>
         <layout>
           <property name="column">0</property>
-          <property name="columnspan">2</property>
+          <property name="columnspan">3</property>
           <property name="propagate">True</property>
           <property name="row">1</property>
           <property name="rowspan">1</property>
@@ -67,7 +67,7 @@
       <object class="ttk.Label" id="speed_label">
         <property name="text" translatable="yes">Speed</property>
         <layout>
-          <property name="column">1</property>
+          <property name="column">2</property>
           <property name="propagate">True</property>
           <property name="row">2</property>
         </layout>
@@ -79,7 +79,7 @@
         <property name="length">300</property>
         <property name="orient">horizontal</property>
         <layout>
-          <property name="column">1</property>
+          <property name="column">2</property>
           <property name="propagate">True</property>
           <property name="row">3</property>
         </layout>
@@ -97,9 +97,20 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Button" id="stimuli">
-        <property name="command">on_stimuli</property>
+      <object class="ttk.Button" id="stimuli_color">
+        <property name="command">on_stimuli_color</property>
         <property name="text" translatable="yes">Stimuli-Color</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="generate">
+        <property name="command">on_generate</property>
+        <property name="text" translatable="yes">Generate Random Stimuli</property>
         <layout>
           <property name="column">1</property>
           <property name="propagate">True</property>
