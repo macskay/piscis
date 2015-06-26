@@ -50,8 +50,25 @@ Friday, 06/18/15 & Saturday, 06/20/15, 4h, 11:30 PM - 3 AM
   - Hooking up the copy canvases
   - Hooking up Color-Changer Button funtionality
 
-
-
-  
-  
 Total: 21h
+
+Monday, 06/21/15, 2h,  8 PM - 10 PM
+ - Added second monitor
+ - Tried to enforce full-screen on second monitor from start
+
+Tuesday, 06/22/15, 3h, 7 PM - 10 PM
+ - Added random starting point generation
+ - Changed random starting point behaviour to center stimuli on the screen
+
+Wednesday, 06/23/15, 1h, 9 PM - 10 PM
+ - Added canvas copies to the second monitor to synchronize them
+ - Added possibility to change second monitor's background color
+ - Added full-screen-ability button to enforcen full-screen on second monitor
+
+Thursday, 06/24/15, 2h, 9 - 11 PM
+ - Added realtime events, so the stimuli actually scales up
+ - Added slider functionality
+ - Finished up first version v1.0
+ - Created Installer-File for the first version
+
+Total: 29h
