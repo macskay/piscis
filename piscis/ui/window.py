@@ -34,7 +34,7 @@ class MainWindow(TkApplication):
         self.builder.connect_callbacks(self)
 
     def setup_window(self):
-        self.set_title("Piscis - Pre-Alpha")
+        self.set_title("Piscis - Alpha")
         return self.builder.get_object('main_window', self.master)
 
     def setup_menu(self):
@@ -70,7 +70,7 @@ class MainWindow(TkApplication):
         return AllScreens(all_screens)
 
     def on_about(self):
-        showinfo("Piscis", "Piscis - Pre-Alpha\nContact: soojin.ryu@mpimf-heidelberg.mpg.de")
+        showinfo("Piscis", "Piscis - Alpha\nContact: soojin.ryu@mpimf-heidelberg.mpg.de")
 
     def on_exit(self):
         self.master.quit()
