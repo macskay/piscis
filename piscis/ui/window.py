@@ -150,6 +150,9 @@ class Screen(object):
         self.setup_screen()
         self.builder.connect_callbacks(self)
 
+        self.current_scale = 0.0
+        self.predator_x, self.predator_y = 0, 0
+
         self.root.after(40, self.update)
 
     def setup_screen(self):
@@ -224,8 +227,7 @@ class Screen(object):
         self.scale_slider_value = float(value)
 
     def on_generate(self):
-        self.reset_predators()
-        self.create_predators()
+        self.predator_x, self.predator_y = random.random(), random.random()
 
     def reset_predators(self):
         self.canvas.delete(self.predator_canvas)
@@ -233,11 +235,9 @@ class Screen(object):
         self.window_canvas.delete(self.predator_window_canvas)
 
     def create_predators(self):
-        x, y = random.random(), random.random()
-
-        self.predator_canvas = self.draw_predator(x, y, self.canvas)
-        self.predator_parent_canvas = self.draw_predator(x, y, self.parent_canvas)
-        self.predator_window_canvas = self.draw_predator(x, y, self.window_canvas)
+        self.predator_canvas = self.draw_predator(self.predator_x, self.predator_y, self.canvas)
+        self.predator_parent_canvas = self.draw_predator(self.predator_x, self.predator_y, self.parent_canvas)
+        self.predator_window_canvas = self.draw_predator(self.predator_x, self.predator_y, self.window_canvas)
 
     def draw_predator(self, x, y, canvas):
         width, height = canvas.winfo_width(), canvas.winfo_height()
@@ -248,7 +248,7 @@ class Screen(object):
 
     def calculate_coordinates(self, height, width, x, y):
         begin_x, begin_y = x * width, y * height
-        end_x, end_y = x * width + width * self.scale_slider_value, y * height + width * self.scale_slider_value
+        end_x, end_y = x * width + width * self.current_scale, y * height + width * self.current_scale
         pred_width, pred_height = end_x - begin_x, end_y - begin_y
 
         begin_x -= pred_width // 2
@@ -259,4 +259,11 @@ class Screen(object):
         return begin_x, begin_y, end_x, end_y
 
     def update(self):
-        pass
+        self.root.after(40, self.update)
+
+        self.current_scale += self.speed_slider_value / 50
+        if self.current_scale >= self.scale_slider_value:
+            self.current_scale = 0.0
+
+        self.reset_predators()
+        self.create_predators()
