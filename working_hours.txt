@@ -19,8 +19,8 @@ Sunday, 06/14/15 & Monday, 06/15/15, 2h, 11 PM - 1 AM
  - Window-Design
   - Combo Box Functionality
   - Canvas Addition
-  
-Tuesday, 06/16/15, 2h, 1 PM - 3 PM
+
+  Tuesday, 06/16/15, 2h, 1 PM - 3 PM
  - Window-Improvements
   - Adding of a second window on another monitor
   - Widget-Placement
