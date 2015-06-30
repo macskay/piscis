@@ -11,6 +11,12 @@
       <property name="propagate">True</property>
       <property name="row">0</property>
       <property name="rowspan">1</property>
+      <rows>
+        <row id="0">
+          <property name="minsize">0</property>
+          <property name="pad">0</property>
+        </row>
+      </rows>
       <columns>
         <column id="0">
           <property name="weight">0</property>
@@ -19,12 +25,6 @@
           <property name="weight">0</property>
         </column>
       </columns>
-      <rows>
-        <row id="0">
-          <property name="minsize">0</property>
-          <property name="pad">0</property>
-        </row>
-      </rows>
     </layout>
     <child>
       <object class="tk.Canvas" id="canvas">
@@ -116,6 +116,37 @@
           <property name="column">1</property>
           <property name="propagate">True</property>
           <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="start_stimulation">
+        <property name="command">on_start</property>
+        <property name="text" translatable="yes">Start Simulation</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="scale_value">
+        <property name="text" translatable="yes">0.00</property>
+        <layout>
+          <property name="column">0</property>
+          <property name="propagate">True</property>
+          <property name="row">4</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="speed_value">
+        <property name="text" translatable="yes">0.00</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">4</property>
         </layout>
       </object>
     </child>

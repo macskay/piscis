@@ -73,8 +73,8 @@
           <property name="row">1</property>
         </layout>
         <child>
-          <object class="tk.Canvas" id="screen_one">
-            <property name="background">#0080c0</property>
+          <object class="tk.Canvas" id="canvas_one">
+            <property name="background">#ff00ff</property>
             <property name="height">450</property>
             <property name="highlightthickness">0</property>
             <property name="selectborderwidth">0</property>
@@ -98,8 +98,8 @@
           <property name="row">1</property>
         </layout>
         <child>
-          <object class="tk.Canvas" id="screen_two">
-            <property name="background">#0080c0</property>
+          <object class="tk.Canvas" id="canvas_two">
+            <property name="background">#ff00ff</property>
             <property name="height">450</property>
             <property name="highlightthickness">0</property>
             <property name="insertontime">100</property>
@@ -145,8 +145,8 @@
           <property name="row">2</property>
         </layout>
         <child>
-          <object class="tk.Canvas" id="screen_three">
-            <property name="background">#0080c0</property>
+          <object class="tk.Canvas" id="canvas_three">
+            <property name="background">#ff00ff</property>
             <property name="height">450</property>
             <property name="highlightthickness">0</property>
             <property name="relief">flat</property>
@@ -173,8 +173,8 @@
           <property name="row">2</property>
         </layout>
         <child>
-          <object class="tk.Canvas" id="screen_four">
-            <property name="background">#0080c0</property>
+          <object class="tk.Canvas" id="canvas_four">
+            <property name="background">#ff00ff</property>
             <property name="height">450</property>
             <property name="highlightthickness">0</property>
             <property name="relief">ridge</property>
