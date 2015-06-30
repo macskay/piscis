@@ -1,6 +1,6 @@
 from os import path
 import random
-from tkinter import Toplevel
+from tkinter import Toplevel, ALL
 from tkinter.colorchooser import askcolor
 from tkinter.messagebox import showinfo
 from tkinter.ttk import Style
@@ -11,6 +11,7 @@ from piscis.model import PredatorFactory
 SCRIPT_DIR = path.dirname(path.abspath(__file__))
 BACKGROUND_COLOR = "#FFFFFF"
 PREDATOR_COLOR = "#000000"
+
 
 # noinspection PyAttributeOutsideInit
 class MainWindow(TkApplication):
@@ -55,7 +56,8 @@ class MainWindow(TkApplication):
             self.current_tab += 1
             return SingleCanvasTab(self.pygubu_builder.get_object(identifier, self.master), self.current_tab-1, self)
 
-    def on_about(self):
+    @staticmethod
+    def on_about():
         showinfo("Piscis", "Piscis - 1.0\nContact: soojin.ryu@mpimf-heidelberg.mpg.de")
 
     def on_exit(self):
@@ -94,13 +96,13 @@ class MainWindow(TkApplication):
     def render(self):
         for i, item in enumerate(self.predator):
             if item is not None:
-                item.render(self.tabs[i])
-                item.render_copy_canvases(self.all_tab, i)
-                item.render_copy_canvases(self.secondary_window, i)
+                drawer = PredatorDrawer(item)
+                drawer.draw_predator(self.tabs[i], self.all_tab, self.secondary_window, i)
 
     def change_background_color_of_all_canvas(self, id_number, color):
         self.all_tab.change_background(id_number, color)
         self.secondary_window.change_canvas_background(id_number, color)
+
 
 # noinspection PyAttributeOutsideInit
 class SingleCanvasTab(TkApplication):
@@ -153,8 +155,10 @@ class SingleCanvasTab(TkApplication):
     def on_generate(self):
         self.canvas.delete(self.predator_draw_object)
         self.predator = self.parent.create_predator(self.color, self.target_diameter, self.scaling_velocity)
+        drawer = PredatorDrawer(self.predator)
         width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
-        begin_x, begin_y, end_x, end_y = self.predator.calculate_coordinates(width, height, self.target_diameter)
+
+        begin_x, begin_y, end_x, end_y = drawer.calculate_coordinates(width, height, self.target_diameter)
 
         self.predator_draw_object = self.canvas.create_oval(begin_x, begin_y, end_x,
                                                             end_y,
@@ -212,6 +216,7 @@ class AllCanvasTab(TkApplication):
     def change_background(self, color, id_number):
         self.canvas[id_number].configure(background=color)
 
+
 # noinspection PyAttributeOutsideInit
 class SecondaryWindow(TkApplication):
     def _create_ui(self):
@@ -251,3 +256,42 @@ class SecondaryWindow(TkApplication):
 
     def change_canvas_background(self, color, id_number):
         self.canvas[id_number].configure(background=color)
+
+
+class PredatorDrawer(object):
+    def __init__(self, predator):
+        self.predator = predator
+
+    def draw_predator(self, tab, all_tab, secondary, index):
+        self.render(tab)
+        self.render_copy_canvases(all_tab, index)
+        self.render_copy_canvases(secondary, index)
+
+    def render(self, tab):  # pragma: no cover
+        tab.canvas.delete(ALL)
+        tab.predator_draw_object = self.render_predator(tab.canvas)
+
+    def render_copy_canvases(self, copy_screen, index):  # pragma: no cover
+        copy_screen.canvas[index].delete(ALL)
+        copy_screen.predator_draw_object[index] = self.render_predator(copy_screen.canvas[index])
+
+    def render_predator(self, canvas):  # pragma: no cover
+        now = int(time.time()*1000)
+        width, height = canvas.winfo_width(), canvas.winfo_height()
+        begin_x, begin_y, end_x, end_y = \
+            self.calculate_coordinates(width, height, self.predator.get_current_diameter(now))
+
+        return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.predator.color, outline=self.predator.color)
+
+    def calculate_coordinates(self, height, width, current_diameter):  # pragma: no cover
+        begin_x, begin_y = width*self.predator.get_position()[0], height*self.predator.get_position()[1]
+        end_x, end_y = begin_x+current_diameter*width, begin_y+current_diameter*width
+
+        pred_width, pred_height = end_x - begin_x, end_y - begin_y
+
+        begin_x -= pred_width // 2
+        begin_y -= pred_height // 2
+
+        end_x -= pred_width // 2
+        end_y -= pred_height // 2
+        return begin_x, begin_y, end_x, end_y

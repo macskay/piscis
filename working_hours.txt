@@ -72,3 +72,17 @@ Thursday, 06/24/15, 2h, 9 - 11 PM
  - Created Installer-File for the first version
 
 Total: 29h
+
+Sunday, 06/28/15, 5h, 14 - 19 PM
+ - Started a big refactoring for new functionalites
+ - Decoupling of UI and Logic
+
+Tuesday, 06/30/15 - Wednesday, 07/01/15, 3h, 22 PM - 1 AM
+ - Ended refactoring
+ - Added vector calculation logic
+ - Added value-label to UI
+ - Changed default background colors
+ - Changed default stimuli colors
+ - Only allowed floats with two decimals for slider-values
+ - Added tests to all models
+

@@ -95,32 +95,3 @@ class Predator(object):
 
     def set_target_diameter(self, value):  # pragma: no cover
         self.scaling_vector.target_diameter = value
-
-    def render(self, tab):  # pragma: no cover
-        tab.canvas.delete(ALL)
-        tab.predator_draw_object = self.render_predator(tab.canvas)
-
-    def render_copy_canvases(self, copy_screen, index):  # pragma: no cover
-        copy_screen.canvas[index].delete(ALL)
-        copy_screen.predator_draw_object[index] = self.render_predator(copy_screen.canvas[index])
-
-    def render_predator(self, canvas):  # pragma: no cover
-        now = int(time.time()*1000)
-        width, height = canvas.winfo_width(), canvas.winfo_height()
-        begin_x, begin_y, end_x, end_y = \
-            self.calculate_coordinates(width, height, self.get_current_diameter(now))
-
-        return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.color, outline=self.color)
-
-    def calculate_coordinates(self, height, width, current_diameter):  # pragma: no cover
-        begin_x, begin_y = width*self.get_position()[0], height*self.get_position()[1]
-        end_x, end_y = begin_x+current_diameter*width, begin_y+current_diameter*width
-
-        pred_width, pred_height = end_x - begin_x, end_y - begin_y
-
-        begin_x -= pred_width // 2
-        begin_y -= pred_height // 2
-
-        end_x -= pred_width // 2
-        end_y -= pred_height // 2
-        return begin_x, begin_y, end_x, end_y
