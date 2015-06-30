@@ -15,7 +15,7 @@
         </child>
         <child>
           <object class="tk.Menuitem.Command" id="background_fullscreen">
-            <property name="command">change_fullscreen_bg</property>
+            <property name="command">on_change_fullscreen</property>
             <property name="command_id_arg">false</property>
             <property name="label" translatable="yes">Change Full-Screen Color</property>
           </object>
@@ -44,7 +44,7 @@
       </object>
     </child>
   </object>
-  <object class="ttk.Frame" id="main_window">
+  <object class="ttk.Frame" id="main_frame">
     <property name="height">200</property>
     <property name="width">200</property>
     <layout>
@@ -65,7 +65,7 @@
           <object class="ttk.Notebook.Tab" id="allscreens">
             <property name="text" translatable="yes">All Screens</property>
             <child>
-              <object class="ttk.Labelframe" id="allscreens_text">
+              <object class="ttk.Labelframe" id="tab_all_screens">
                 <property name="height">200</property>
                 <property name="labelanchor">n</property>
                 <property name="padding">100</property>
@@ -84,28 +84,27 @@
           <object class="ttk.Notebook.Tab" id="screenone">
             <property name="text" translatable="yes">Screen 1</property>
             <child>
-              <object class="ttk.Labelframe" id="screenone_text">
+              <object class="ttk.Labelframe" id="tab_single_tab_one">
                 <property name="height">200</property>
                 <property name="labelanchor">n</property>
                 <property name="padding">150</property>
-                <property name="style">BW.TLabel</property>
                 <property name="text" translatable="yes">Screen 1</property>
                 <property name="width">200</property>
                 <layout>
                   <property name="column">0</property>
                   <property name="propagate">True</property>
                   <property name="row">0</property>
-                  <columns>
-                    <column id="0">
-                      <property name="pad">0</property>
-                    </column>
-                  </columns>
                   <rows>
                     <row id="0">
                       <property name="minsize">0</property>
                       <property name="pad">0</property>
                     </row>
                   </rows>
+                  <columns>
+                    <column id="0">
+                      <property name="pad">0</property>
+                    </column>
+                  </columns>
                 </layout>
               </object>
             </child>
@@ -115,11 +114,10 @@
           <object class="ttk.Notebook.Tab" id="screentwo">
             <property name="text" translatable="yes">Screen 2</property>
             <child>
-              <object class="ttk.Labelframe" id="screentwo_text">
+              <object class="ttk.Labelframe" id="tab_single_tab_two">
                 <property name="height">200</property>
                 <property name="labelanchor">n</property>
                 <property name="padding">150</property>
-                <property name="style">BW.TLabel</property>
                 <property name="text" translatable="yes">Screen 2</property>
                 <property name="width">200</property>
                 <layout>
@@ -135,11 +133,10 @@
           <object class="ttk.Notebook.Tab" id="screenthree">
             <property name="text" translatable="yes">Screen 3</property>
             <child>
-              <object class="ttk.Labelframe" id="screenthree_text">
+              <object class="ttk.Labelframe" id="tab_single_tab_three">
                 <property name="height">200</property>
                 <property name="labelanchor">n</property>
                 <property name="padding">150</property>
-                <property name="style">BW.TLabel</property>
                 <property name="text" translatable="yes">Screen 3</property>
                 <property name="width">200</property>
                 <layout>
@@ -155,11 +152,10 @@
           <object class="ttk.Notebook.Tab" id="screenfour">
             <property name="text" translatable="yes">Screen 4</property>
             <child>
-              <object class="ttk.Labelframe" id="screenfour_text">
+              <object class="ttk.Labelframe" id="tab_single_tab_four">
                 <property name="height">200</property>
                 <property name="labelanchor">n</property>
                 <property name="padding">150</property>
-                <property name="style">BW.TLabel</property>
                 <property name="text" translatable="yes">Screen 4</property>
                 <property name="width">200</property>
                 <layout>

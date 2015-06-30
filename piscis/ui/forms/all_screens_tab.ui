@@ -10,7 +10,7 @@
       <property name="row">0</property>
     </layout>
     <child>
-      <object class="tk.Canvas" id="screen_one">
+      <object class="tk.Canvas" id="canvas_one">
         <property name="background">#ff00ff</property>
         <property name="relief">flat</property>
         <property name="width">400</property>
@@ -22,7 +22,7 @@
       </object>
     </child>
     <child>
-      <object class="tk.Canvas" id="screen_two">
+      <object class="tk.Canvas" id="canvas_two">
         <property name="background">#ff00ff</property>
         <property name="width">400</property>
         <layout>
@@ -33,7 +33,7 @@
       </object>
     </child>
     <child>
-      <object class="tk.Canvas" id="screen_three">
+      <object class="tk.Canvas" id="canvas_three">
         <property name="background">#ff00ff</property>
         <property name="width">400</property>
         <layout>
@@ -44,7 +44,7 @@
       </object>
     </child>
     <child>
-      <object class="tk.Canvas" id="screen_four">
+      <object class="tk.Canvas" id="canvas_four">
         <property name="background">#ff00ff</property>
         <property name="width">400</property>
         <layout>
@@ -55,7 +55,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="screen_one_text">
+      <object class="ttk.Label" id="canvas_one_label">
         <property name="text" translatable="yes">Screen 1</property>
         <layout>
           <property name="column">0</property>
@@ -65,7 +65,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="screen_two_text">
+      <object class="ttk.Label" id="canvas_two_label">
         <property name="text" translatable="yes">Screen 2</property>
         <layout>
           <property name="column">1</property>
@@ -75,7 +75,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="screen_three_text">
+      <object class="ttk.Label" id="canvas_three_label">
         <property name="text" translatable="yes">Screen 3</property>
         <layout>
           <property name="column">0</property>
@@ -85,7 +85,7 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="screen_four_text">
+      <object class="ttk.Label" id="canvas_four_label">
         <property name="text" translatable="yes">Screen 4</property>
         <layout>
           <property name="column">1</property>

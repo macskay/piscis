@@ -1,73 +1,59 @@
-#-*- encoding: utf-8 -*-
-
 from os import path
 import random
-from tkinter import messagebox, Frame, Label, Button, Canvas, Toplevel, Tk
+from tkinter import Toplevel
 from tkinter.colorchooser import askcolor
 from tkinter.messagebox import showinfo
 from tkinter.ttk import Style
-from pygubu import Builder, TkApplication
-
-VERTICAL_Y_MARGIN = 0.15
-
-VERTICAL_X_MARGIN = 0.014
-
-HORIZONTAL_Y_MARGIN = 0.044
-
-HORIZONTAL_X_MARGIN = 0.09
-
-TITLE_FONT = {"Helvetica", 18, "bold"}
+from pygubu import TkApplication, Builder
+import time
+from piscis.model import PredatorFactory
 
 SCRIPT_DIR = path.dirname(path.abspath(__file__))
+BACKGROUND_COLOR = "#FFFFFF"
+PREDATOR_COLOR = "#000000"
 
+# noinspection PyAttributeOutsideInit
 class MainWindow(TkApplication):
     def _create_ui(self):
-        self.builder = Builder()
-        file = path.join(SCRIPT_DIR, "forms", "window.ui")
-        self.builder.add_from_file(file)
+        self.pygubu_builder = Builder()
+        self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "main_window.ui"))
 
-        self.main_window = self.setup_window()
-        self.main_menu = self.setup_menu()
-        self.second_monitor = self.setup_second_monitor()
-        self.setup_screens()
-        
-        self.builder.connect_callbacks(self)
+        self.secondary_window = SecondaryWindow(Toplevel())
 
-    def setup_window(self):
+        self.predator = [None, None, None, None]
+        self.current_tab = 0
+        self.tabs = list()
+        self.all_tab = None
+
+        self.predator_factory = PredatorFactory()
+
+        self.setup()
+
+    def setup(self):
         self.set_title("Piscis")
-        return self.builder.get_object('main_window', self.master)
 
-    def setup_menu(self):
-        main_menu = self.builder.get_object('main_menu', self.master)
-        self.set_menu(main_menu)
-        return main_menu
+        self.pygubu_builder.get_object('main_frame', self.master)
+        self.set_menu(self.pygubu_builder.get_object('main_menu', self.master))
 
-    def setup_screens(self):
-        all_screens = self.setup_all_screens()
-        self.setup_screen_one(all_screens, self.second_monitor)
-        self.setup_screen_two(all_screens, self.second_monitor)
-        self.setup_screen_three(all_screens, self.second_monitor)
-        self.setup_screen_four(all_screens, self.second_monitor)
+        self.create_tabs()
 
-    def setup_screen_one(self, all_screens, window):
-        screen_one = self.builder.get_object('screenone_text', self.master)
-        return Screen(screen_one, all_screens.screen_one, window.screen_one)
+        self.pygubu_builder.connect_callbacks(self)
 
-    def setup_screen_two(self, all_screens, window):
-        screen_two = self.builder.get_object('screentwo_text', self.master)
-        return Screen(screen_two, all_screens.screen_two, window.screen_two)
+        self.start_update()
 
-    def setup_screen_three(self, all_screens, window):
-        screen_three = self.builder.get_object('screenthree_text', self.master)
-        return Screen(screen_three, all_screens.screen_three, window.screen_three)
+    def create_tabs(self):
+        self.all_tab = self._create_canvas_tab('tab_all_screens')
+        self.tabs.append(self._create_canvas_tab('tab_single_tab_one'))
+        self.tabs.append(self._create_canvas_tab('tab_single_tab_two'))
+        self.tabs.append(self._create_canvas_tab('tab_single_tab_three'))
+        self.tabs.append(self._create_canvas_tab('tab_single_tab_four'))
 
-    def setup_screen_four(self, all_screens, window):
-        screen_four = self.builder.get_object('screenfour_text', self.master)
-        return Screen(screen_four, all_screens.screen_four, window.screen_four)
-
-    def setup_all_screens(self):
-        all_screens = self.builder.get_object('allscreens_text', self.master)
-        return AllScreens(all_screens)
+    def _create_canvas_tab(self, identifier):
+        if identifier == 'tab_all_screens':
+            return AllCanvasTab(self.pygubu_builder.get_object(identifier, self.master))
+        else:
+            self.current_tab += 1
+            return SingleCanvasTab(self.pygubu_builder.get_object(identifier, self.master), self.current_tab-1, self)
 
     def on_about(self):
         showinfo("Piscis", "Piscis - 1.0\nContact: soojin.ryu@mpimf-heidelberg.mpg.de")
@@ -76,194 +62,192 @@ class MainWindow(TkApplication):
         self.master.quit()
 
     def on_fullscreen(self):
-        self.second_monitor.set_fullscreen()
+        self.secondary_window.set_fullscreen()
 
-    def change_fullscreen_bg(self):
-        new_color = askcolor(color=self.second_monitor.bg_color, title="Change Background-Color")[1]
-        self.second_monitor.change_background_color(new_color)
+    def on_change_fullscreen(self):
+        new_color = askcolor(color=self.secondary_window.current_background_color, title="Change Background-Color")[1]
+        self.secondary_window.change_background_color(new_color)
 
-    def setup_second_monitor(self):
-        return SecondScreen(Toplevel())
+    def create_predator(self, color, target_diameter, scaling_velocity):
+        self.predator_factory.starting_position = (random.random(), random.random())
+        self.predator_factory.target_diameter = target_diameter
+        self.predator_factory.scaling_velocity = scaling_velocity
+        self.predator_factory.color = color
 
-class SecondScreen(object):
-    def __init__(self, root):
-        self.root = root
-        self.builder = Builder()
-        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "second_screen.ui"))
+        return self.predator_factory.create()
 
-        self.bg_color = '#3F8080'
+    def get_predator_color(self):
+        return self.predator_factory.color
 
-        self.style = Style()
-        self.change_background_color(self.bg_color)
-        self.main_frame = self.builder.get_object('main_frame', self.root)
+    def start_predator(self, predator, id_number):
+        now = int(time.time()*1000)
+        predator.start_scaling(now)
+        self.predator[id_number] = predator
 
-        self.screen_one = self.builder.get_object('screen_one', self.root)
-        self.screen_two = self.builder.get_object('screen_two', self.root)
-        self.screen_three = self.builder.get_object('screen_three', self.root)
-        self.screen_four = self.builder.get_object('screen_four', self.root)
-
-    def set_fullscreen(self):
-        w, h = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
-        self.root.overrideredirect(1)
-        self.root.geometry("%dx%d+0+0" % (w, h))
-
-    def change_background_color(self, color):
-        self.bg_color = color
-        self.style.configure('TFrame', background=color)
-
-class AllScreens(object):
-    def __init__(self, root):
-        self.root = root
-        self.builder = Builder()
-        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "all_screens.ui"))
-        self.screen_one = self.builder.get_object('screen_one', self.root)
-        self.screen_two = self.builder.get_object('screen_two', self.root)
-        self.screen_three = self.builder.get_object('screen_three', self.root)
-        self.screen_four = self.builder.get_object('screen_four', self.root)
-
-        self.builder.get_object('screen_one_text', self.root)
-        self.builder.get_object('screen_two_text', self.root)
-        self.builder.get_object('screen_three_text', self.root)
-        self.builder.get_object('screen_four_text', self.root)
-
-
-class Screen(object):
-    CANVAS_DEFAULT_BACKGROUND = "#3F8080"
-    PREDATOR_COLOR = "#FFFFFF"
-
-    def __init__(self, root, parent_canvas, window_canvas):
-        self.root = root
-
-        self.parent_canvas = parent_canvas
-        self.window_canvas = window_canvas
-        self.canvas = None
-
-        self.predator_canvas = None
-        self.predator_parent_canvas = None
-        self.predator_window_canvas = None
-
-        self.speed_slider_value = 0
-        self.scale_slider_value = 0
-
-        self.builder = Builder()
-        self.builder.add_from_file(path.join(SCRIPT_DIR, "forms", "screen_one.ui"))
-        self.setup_screen()
-        self.builder.connect_callbacks(self)
-
-        self.current_scale = 0.0
-        self.predator_x, self.predator_y = 0, 0
-
-        self.root.after(40, self.update)
-
-    def setup_screen(self):
-        self.setup_canvas()
-        self.setup_fishbox()
-        self.setup_scale_slider()
-        self.setup_speed_slider()
-        self.setup_buttons()
-
-    def setup_canvas(self):
-        self.canvas = self.builder.get_object('canvas', self.root)
-
-    def change_canvas_background(self, value):
-        self.canvas.configure(background=value)
-        self.parent_canvas.configure(background=value)
-        self.window_canvas.configure(background=value)
-
-    def setup_fishbox_canvas(self, screen):
-        width, height = screen.winfo_reqwidth(), screen.winfo_reqheight()
-        self.draw_horizontal_borders(height, screen, width)
-        self.draw_vertical_borders(height, screen, width)
-
-    def setup_fishbox(self):
-        # noinspection PyTypeChecker
-        self.setup_fishbox_canvas(self.canvas)
-        self.setup_fishbox_canvas(self.parent_canvas)
-        self.setup_fishbox_canvas(self.window_canvas)
-
-    def draw_horizontal_borders(self, height, screen, width):
-        start_x, start_y = self.get_startx_starty_horizontal(screen)
-        self.change_canvas_background(self.CANVAS_DEFAULT_BACKGROUND)
-        screen.create_line(start_x, start_y, width - start_x, start_y, fill="#CCCCCC")
-        screen.create_line(start_x, height - start_y, width - start_x, height - start_y, fill="#CCCCCC")
-
-    def get_startx_starty_horizontal(self, screen):
-        return screen.winfo_reqwidth()*HORIZONTAL_X_MARGIN, \
-               screen.winfo_reqheight()*HORIZONTAL_Y_MARGIN
-
-    def draw_vertical_borders(self, height, screen, width):
-        start_x, start_y = self.get_startx_starty_vertical(screen)
-        screen.create_line(start_x, start_y, start_x, height - start_y, fill="#CCCCCC")
-        screen.create_line(width - start_x, start_y, width - start_x, height - start_y, fill="#CCCCCC")
-
-    def get_startx_starty_vertical(self, screen):
-        return screen.winfo_reqwidth()*VERTICAL_X_MARGIN, \
-               screen.winfo_reqheight()*VERTICAL_Y_MARGIN
-
-    def setup_scale_slider(self):
-        self.builder.get_object('scale_label', self.root)
-        self.builder.get_object('scale_slider', self.root)
-
-    def setup_speed_slider(self):
-        self.builder.get_object('speed_label', self.root)
-        self.builder.get_object('speed_slider', self.root)
-
-    def setup_buttons(self):
-        self.builder.get_object('background', self.root)
-        self.builder.get_object('stimuli_color', self.root)
-        self.builder.get_object('generate', self.root)
-
-    def on_background(self):
-        new_bg_color = askcolor(color=self.CANVAS_DEFAULT_BACKGROUND, title="Change Background-Color")[1]
-        self.change_canvas_background(new_bg_color)
-
-    def on_stimuli_color(self):
-        self.PREDATOR_COLOR = askcolor(color=self.PREDATOR_COLOR, title="Change Stimuli-Color")[1]
-
-    def on_speed_slider(self, value):
-        self.speed_slider_value = float(value)
-
-    def on_scale_slider(self, value):
-        self.scale_slider_value = float(value)
-
-    def on_generate(self):
-        self.predator_x, self.predator_y = random.random(), random.random()
-
-    def reset_predators(self):
-        self.canvas.delete(self.predator_canvas)
-        self.parent_canvas.delete(self.predator_parent_canvas)
-        self.window_canvas.delete(self.predator_window_canvas)
-
-    def create_predators(self):
-        self.predator_canvas = self.draw_predator(self.predator_x, self.predator_y, self.canvas)
-        self.predator_parent_canvas = self.draw_predator(self.predator_x, self.predator_y, self.parent_canvas)
-        self.predator_window_canvas = self.draw_predator(self.predator_x, self.predator_y, self.window_canvas)
-
-    def draw_predator(self, x, y, canvas):
-        width, height = canvas.winfo_width(), canvas.winfo_height()
-        begin_x, begin_y, end_x, end_y = self.calculate_coordinates(height, width, x, y)
-
-        return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.PREDATOR_COLOR,
-                                  outline=self.PREDATOR_COLOR)
-
-    def calculate_coordinates(self, height, width, x, y):
-        begin_x, begin_y = x * width, y * height
-        end_x, end_y = x * width + width * self.current_scale, y * height + width * self.current_scale
-        pred_width, pred_height = end_x - begin_x, end_y - begin_y
-
-        begin_x -= pred_width // 2
-        begin_y -= pred_height // 2
-
-        end_x -= pred_width // 2
-        end_y -= pred_height // 2
-        return begin_x, begin_y, end_x, end_y
+    def start_update(self):
+        self.master.after(25, self.update)
 
     def update(self):
-        self.root.after(40, self.update)
+        self.master.after(25, self.update)
+        self.render()
 
-        self.current_scale += self.speed_slider_value / 50
-        if self.current_scale >= self.scale_slider_value:
-            self.current_scale = 0.0
+    def render(self):
+        for i, item in enumerate(self.predator):
+            if item is not None:
+                item.render(self.tabs[i])
+                item.render_copy_canvases(self.all_tab, i)
+                item.render_copy_canvases(self.secondary_window, i)
 
-        self.reset_predators()
-        self.create_predators()
+    def change_background_color_of_all_canvas(self, id_number, color):
+        self.all_tab.change_background(id_number, color)
+        self.secondary_window.change_canvas_background(id_number, color)
+
+# noinspection PyAttributeOutsideInit
+class SingleCanvasTab(TkApplication):
+    def __init__(self, master, id_number, parent=None):
+        TkApplication.__init__(self, master)
+        self.id_number = id_number
+        self.parent = parent
+
+        self.change_background_color(self.current_background_color)
+        self.target_diameter = 0
+        self.scaling_velocity = 0
+
+        self.predator = None
+        self.predator_draw_object = None
+
+    def _create_ui(self):
+        self.pygubu_builder = Builder()
+        self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "single_canvas_tab.ui"))
+
+        self.setup()
+
+    def setup(self):
+        self.canvas = self.pygubu_builder.get_object('canvas', self.master)
+
+        self.current_background_color = BACKGROUND_COLOR
+        self.color = PREDATOR_COLOR
+
+        self.scale_value_string = self._create_scale_slider()
+        self.speed_value_string = self._create_speed_slider()
+        self._create_buttons()
+
+        self.pygubu_builder.connect_callbacks(self)
+
+    def _create_scale_slider(self):
+        self.pygubu_builder.get_object('scale_label', self.master)
+        self.pygubu_builder.get_object('scale_slider', self.master)
+        return self.pygubu_builder.get_object('scale_value', self.master)
+
+    def _create_speed_slider(self):
+        self.pygubu_builder.get_object('speed_label', self.master)
+        self.pygubu_builder.get_object('speed_slider', self.master)
+        return self.pygubu_builder.get_object('speed_value', self.master)
+
+    def _create_buttons(self):
+        self.pygubu_builder.get_object('background', self.master)
+        self.pygubu_builder.get_object('stimuli_color', self.master)
+        self.pygubu_builder.get_object('generate', self.master)
+        self.pygubu_builder.get_object('start_stimulation', self.master)
+
+    def on_generate(self):
+        self.canvas.delete(self.predator_draw_object)
+        self.predator = self.parent.create_predator(self.color, self.target_diameter, self.scaling_velocity)
+        width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
+        begin_x, begin_y, end_x, end_y = self.predator.calculate_coordinates(width, height, self.target_diameter)
+
+        self.predator_draw_object = self.canvas.create_oval(begin_x, begin_y, end_x,
+                                                            end_y,
+                                                            fill=self.color, outline=self.color)
+
+    def on_background(self):
+        new_color = askcolor(color=self.current_background_color, title="Change Background-Color")[1]
+        self.change_background_color(new_color)
+
+    def on_stimuli_color(self):
+        new_color = askcolor(color=self.parent.get_predator_color(), title="Change Predator-Color")[1]
+        self.color = new_color
+        if self.predator is not None:
+            self.predator.color = self.color
+
+    def on_scale_slider(self, value):
+        self.scale_value_string.configure(text="%.2f" % float(value))
+        self.target_diameter = float(value)
+        if self.predator is not None:
+            self.predator.set_target_diameter(self.target_diameter)
+
+    def on_speed_slider(self, value):
+        self.speed_value_string.configure(text="%.2f" % float(value))
+        self.scaling_velocity = float(value)/5
+        if self.predator is not None:
+            self.predator.set_scaling_velocity(self.scaling_velocity)
+
+    def on_start(self):
+        self.parent.start_predator(self.predator, self.id_number)
+
+    def change_background_color(self, color):
+        self.canvas.configure(background=color)
+        self.parent.change_background_color_of_all_canvas(color, self.id_number)
+        self.current_background_color = color
+
+
+class AllCanvasTab(TkApplication):
+    def _create_ui(self):
+        self.pygubu_builder = Builder()
+        self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "all_screens_tab.ui"))
+        self.canvas = list()
+        self.predator_draw_object = [None, None, None, None]
+        self.setup()
+
+    def setup(self):
+        self.canvas.append(self._create_canvas('canvas_one'))
+        self.canvas.append(self._create_canvas('canvas_two'))
+        self.canvas.append(self._create_canvas('canvas_three'))
+        self.canvas.append(self._create_canvas('canvas_four'))
+
+    def _create_canvas(self, identifier):
+        self.pygubu_builder.get_object(identifier+'_label', self.master)
+        return self.pygubu_builder.get_object(identifier, self.master)
+
+    def change_background(self, color, id_number):
+        self.canvas[id_number].configure(background=color)
+
+# noinspection PyAttributeOutsideInit
+class SecondaryWindow(TkApplication):
+    def _create_ui(self):
+        self.pygubu_builder = Builder()
+        self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "secondary_window.ui"))
+
+        self.style = Style()
+
+        self.canvas = list()
+        self.predator_draw_object = [None, None, None, None]
+
+        self.current_background_color = BACKGROUND_COLOR
+
+        self.setup()
+
+    def setup(self):
+        self.set_title("Piscis")
+        self.pygubu_builder.get_object('main_frame', self.master)
+
+        self.canvas.append(self._create_canvas('canvas_one'))
+        self.canvas.append(self._create_canvas('canvas_two'))
+        self.canvas.append(self._create_canvas('canvas_three'))
+        self.canvas.append(self._create_canvas('canvas_four'))
+
+        self.change_background_color(BACKGROUND_COLOR)
+
+    def _create_canvas(self, identifier):
+        return self.pygubu_builder.get_object(identifier, self.master)
+
+    def set_fullscreen(self):
+        self.master.overrideredirect(True)
+        self.master.geometry("%dx%d+0+0" % (self.master.winfo_screenwidth(), self.master.winfo_screenheight()))
+
+    def change_background_color(self, color):
+        self.style.configure('TFrame', background=color)
+        self.current_background_color = color
+
+    def change_canvas_background(self, color, id_number):
+        self.canvas[id_number].configure(background=color)
