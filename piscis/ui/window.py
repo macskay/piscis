@@ -284,7 +284,7 @@ class PredatorDrawer(object):
         return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.predator.color, outline=self.predator.color)
 
     def calculate_coordinates(self, height, width, current_diameter):  # pragma: no cover
-        begin_x, begin_y = width*self.predator.get_position()[0], height*self.predator.get_position()[1]
+        begin_x, begin_y = width*self.predator.get_starting_position()[0], height*self.predator.get_starting_position()[1]
         end_x, end_y = begin_x+current_diameter*width, begin_y+current_diameter*width
 
         pred_width, pred_height = end_x - begin_x, end_y - begin_y

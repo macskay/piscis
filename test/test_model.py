@@ -1,12 +1,13 @@
 from math import sqrt
 from unittest import TestCase
+import time
 from piscis.model import MovementVector, DEGREES_45, ScalingVector, TimeTracker, PredatorFactory, Predator
 
 STARTING_EPOCH = 100000000
 CURRENT_EPOCH = 100001414
 
 
-def assertEqualFloat(actual, expected, error_margin=0.5):
+def assertEqualFloat(actual, expected, error_margin=0.5):  # pragma: no cover
     if not abs(actual - expected) <= error_margin:
         raise AssertionError("Actual: %s\nExpected: %s with range of %s" % (actual, expected, error_margin))
 
@@ -66,8 +67,12 @@ class ScalingVectorTestCase(TestCase):
 
 class PredatorTestCase(TestCase):
     def setUp(self):
-        tr = TimeTracker()
-        self.pr = Predator("#FF0000", tr, tr)
+        self.starting_vector = int(time.time()*1000)
+        self.target_diameter = 120
+        self.scaling_velocity = 5
+        sv = ScalingVector(self.target_diameter, self.scaling_velocity)
+        mv = MovementVector(self.starting_vector, (0, 0))
+        self.pr = Predator("#FF0000", mv, sv)
 
     def test_has_color(self):
         self.assertEqual(self.pr.color, "#FF0000")
@@ -81,6 +86,23 @@ class PredatorTestCase(TestCase):
         self.pr.reset_scaling(500)
         self.assertEqual(self.pr.scaling_vector.starting_epoch, 500)
 
+    def test_can_ask_for_starting_position(self):
+        self.assertEqual(self.starting_vector, self.pr.get_starting_position())
+
+    def test_can_set_scaling_velocity(self):
+        velocity = 50
+        self.pr.set_scaling_velocity(velocity)
+        self.assertEqual(velocity, self.pr.scaling_vector.velocity)
+
+    def test_can_set_target_diameter(self):
+        target_diameter = 120
+        self.pr.set_target_diameter(target_diameter)
+        self.assertEqual(target_diameter, self.pr.scaling_vector.target_diameter)
+
+    def test_when_target_diameter_is_reached_restart_scaling(self):
+        now = int(time.time()*1000)
+        a = self.pr.get_current_diameter(now)
+        self.assertEqual(a, 0.0)
 
 class PredatorFactoryTestCase(TestCase):
     def setUp(self):

@@ -1,6 +1,5 @@
 from math import pi, cos, sin
 import time
-from tkinter import ALL
 
 DEGREES_45 = pi/4.0
 
@@ -82,16 +81,16 @@ class Predator(object):
     def reset_scaling(self, epoch):
         self.scaling_vector.start(epoch)
 
-    def get_current_diameter(self, epoch):  # pragma: no cover
+    def get_current_diameter(self, epoch):
         if self.scaling_vector.is_target_diameter_reached(epoch):
             self.scaling_vector.start(int(time.time()*1000))
         return self.scaling_vector.get_current_diameter(epoch)
 
-    def get_position(self):  # pragma: no cover
+    def get_starting_position(self):
         return self.movement_vector.starting_position
 
-    def set_scaling_velocity(self, value):  # pragma: no cover
+    def set_scaling_velocity(self, value):
         self.scaling_vector.velocity = value
 
-    def set_target_diameter(self, value):  # pragma: no cover
+    def set_target_diameter(self, value):
         self.scaling_vector.target_diameter = value
