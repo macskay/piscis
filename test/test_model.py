@@ -1,6 +1,7 @@
 from math import sqrt
 from unittest import TestCase
 import time
+from unittest.mock import patch
 from piscis.model import MovementVector, DEGREES_45, ScalingVector, TimeTracker, PredatorFactory, Predator
 
 STARTING_EPOCH = 100000000
@@ -40,7 +41,7 @@ class MovementVectorTestCase(TestCase):
 
 class ScalingVectorTestCase(TestCase):
     def setUp(self):
-        self.target_diameter = 500
+        self.target_diameter = 5
         self.velocity = 50
         self.vector = ScalingVector(self.target_diameter, self.velocity)
 
@@ -67,12 +68,14 @@ class ScalingVectorTestCase(TestCase):
 
 class PredatorTestCase(TestCase):
     def setUp(self):
-        self.starting_vector = int(time.time()*1000)
+        self.starting_epoch = int(time.time()*1000)
+        self.starting_position = (5, 5)
         self.target_diameter = 120
         self.scaling_velocity = 5
         sv = ScalingVector(self.target_diameter, self.scaling_velocity)
-        mv = MovementVector(self.starting_vector, (0, 0))
+        mv = MovementVector(self.starting_position, (0, 0))
         self.pr = Predator("#FF0000", mv, sv)
+        self.pr.start_both(self.starting_epoch)
 
     def test_has_color(self):
         self.assertEqual(self.pr.color, "#FF0000")
@@ -87,7 +90,7 @@ class PredatorTestCase(TestCase):
         self.assertEqual(self.pr.scaling_vector.starting_epoch, 500)
 
     def test_can_ask_for_starting_position(self):
-        self.assertEqual(self.starting_vector, self.pr.get_starting_position())
+        self.assertEqual(self.starting_position, self.pr.get_starting_position())
 
     def test_can_set_scaling_velocity(self):
         velocity = 50
@@ -97,12 +100,26 @@ class PredatorTestCase(TestCase):
     def test_can_set_target_diameter(self):
         target_diameter = 120
         self.pr.set_target_diameter(target_diameter)
-        self.assertEqual(target_diameter, self.pr.scaling_vector.target_diameter)
+        assertEqualFloat(target_diameter, self.pr.scaling_vector.target_diameter)
 
-    def test_when_target_diameter_is_reached_restart_scaling(self):
-        now = int(time.time()*1000)
-        a = self.pr.get_current_diameter(now)
-        self.assertEqual(a, 0.0)
+    @patch("time.time")
+    def test_when_target_diameter_is_reached_restart_scaling(self, mock_time):
+        mock_time.return_value = 50
+        self.pr.start_scaling(time.time())
+        mock_time.return_value = 120
+
+        self.pr.get_current_diameter(100)
+        assertEqualFloat(self.pr.scaling_vector.starting_epoch, 50)
+
+    @patch("time.time")
+    def test_when_target_diamater_is_not_reached_keep_scaling_up(self, mock_time):
+        mock_time.return_value = 50
+        self.pr.start_scaling(time.time())
+        mock_time.return_value = 120
+
+        self.pr.get_current_diameter(400000)
+        assertEqualFloat(self.pr.scaling_vector.starting_epoch, 120000.)
+
 
 class PredatorFactoryTestCase(TestCase):
     def setUp(self):
