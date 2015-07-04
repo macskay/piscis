@@ -43,50 +43,6 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="scale_label">
-        <property name="text" translatable="yes">Scale</property>
-        <layout>
-          <property name="column">0</property>
-          <property name="propagate">True</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Scale" id="scale_slider">
-        <property name="command">on_scale_slider</property>
-        <property name="length">300</property>
-        <property name="orient">horizontal</property>
-        <layout>
-          <property name="column">0</property>
-          <property name="propagate">True</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="speed_label">
-        <property name="text" translatable="yes">Speed</property>
-        <layout>
-          <property name="column">2</property>
-          <property name="propagate">True</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Scale" id="speed_slider">
-        <property name="command">on_speed_slider</property>
-        <property name="length">300</property>
-        <property name="orient">horizontal</property>
-        <layout>
-          <property name="column">2</property>
-          <property name="propagate">True</property>
-          <property name="row">3</property>
-        </layout>
-      </object>
-    </child>
-    <child>
       <object class="ttk.Button" id="background">
         <property name="command">on_background</property>
         <property name="text" translatable="yes">Background-Color</property>
@@ -126,27 +82,43 @@
         <layout>
           <property name="column">1</property>
           <property name="propagate">True</property>
-          <property name="row">3</property>
+          <property name="row">2</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="scale_value">
-        <property name="text" translatable="yes">0.00</property>
+      <object class="tk.Scale" id="scale_slider">
+        <property name="command">on_scale_slider</property>
+        <property name="from_">0</property>
+        <property name="label" translatable="yes">                                             Size</property>
+        <property name="length">300</property>
+        <property name="orient">horizontal</property>
+        <property name="resolution">.05</property>
+        <property name="tickinterval">.25</property>
+        <property name="to">1</property>
+        <property name="troughcolor">#8dc09e</property>
         <layout>
           <property name="column">0</property>
           <property name="propagate">True</property>
-          <property name="row">4</property>
+          <property name="row">2</property>
         </layout>
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="speed_value">
-        <property name="text" translatable="yes">0.00</property>
+      <object class="tk.Scale" id="speed_slider">
+        <property name="command">on_speed_slider</property>
+        <property name="from_">0</property>
+        <property name="label" translatable="yes">                                          Speed</property>
+        <property name="length">300</property>
+        <property name="orient">horizontal</property>
+        <property name="resolution">.05</property>
+        <property name="tickinterval">.25</property>
+        <property name="to">1</property>
+        <property name="troughcolor">#8dc09e</property>
         <layout>
           <property name="column">2</property>
           <property name="propagate">True</property>
-          <property name="row">4</property>
+          <property name="row">2</property>
         </layout>
       </object>
     </child>
