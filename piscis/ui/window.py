@@ -26,6 +26,7 @@ class MainWindow(TkApplication):
         self.current_tab = 0
         self.tabs = list()
         self.all_tab = None
+        self.after_id = 0
 
         self.predator_factory = PredatorFactory()
 
@@ -41,7 +42,7 @@ class MainWindow(TkApplication):
 
         self.pygubu_builder.connect_callbacks(self)
 
-        self.start_update()
+        # self.start_update()
 
     def create_tabs(self):
         self.all_tab = self._create_canvas_tab('tab_all_screens')
@@ -71,8 +72,11 @@ class MainWindow(TkApplication):
         new_color = askcolor(color=self.secondary_window.current_background_color, title="Change Background-Color")[1]
         self.secondary_window.change_background_color(new_color)
 
-    def create_predator(self, color, target_diameter, scaling_velocity):
-        self.predator_factory.starting_position = (random.random(), random.random())
+    def create_predator(self, color, target_diameter, scaling_velocity, starting_position=None):
+        if starting_position is None:
+            starting_position = random.random(), random.random()
+
+        self.predator_factory.starting_position = starting_position
         self.predator_factory.target_diameter = target_diameter
         self.predator_factory.scaling_velocity = scaling_velocity
         self.predator_factory.color = color
@@ -83,16 +87,23 @@ class MainWindow(TkApplication):
         return self.predator_factory.color
 
     def start_predator(self, predator, id_number):
+        if predator is None:
+            showinfo("No Predator found", "Please place a stimuli first!")
+            return
         now = int(time.time()*1000)
         predator.start_scaling(now)
         self.predator[id_number] = predator
+        self.start_update()
 
     def start_update(self):
-        self.master.after(25, self.update)
+        self.after_id = self.master.after(25, self.update)
 
     def update(self):
-        self.master.after(25, self.update)
+        self.after_id = self.master.after(25, self.update)
         self.render()
+
+    def stop_update(self):
+        self.master.after_cancel(self.after_id)
 
     def render(self):
         for i, item in enumerate(self.predator):
@@ -119,6 +130,8 @@ class SingleCanvasTab(TkApplication):
         self.predator = None
         self.predator_draw_object = None
 
+        self.starting_position = None
+
     def _create_ui(self):
         self.pygubu_builder = Builder()
         self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "single_canvas_tab.ui"))
@@ -127,6 +140,7 @@ class SingleCanvasTab(TkApplication):
 
     def setup(self):
         self.canvas = self.pygubu_builder.get_object('canvas', self.master)
+        self.canvas.bind("<Button-1>", self.set_starting_position)
 
         self.current_background_color = BACKGROUND_COLOR
         self.color = PREDATOR_COLOR
@@ -136,6 +150,10 @@ class SingleCanvasTab(TkApplication):
         self._create_buttons()
 
         self.pygubu_builder.connect_callbacks(self)
+
+    def set_starting_position(self, event):
+        self.starting_position = event.x/self.canvas.winfo_width(), event.y/self.canvas.winfo_height()
+        self.on_generate()
 
     def _create_scale_slider(self):
         self.pygubu_builder.get_object('scale_slider', self.master)
@@ -148,19 +166,19 @@ class SingleCanvasTab(TkApplication):
         self.pygubu_builder.get_object('stimuli_color', self.master)
         self.pygubu_builder.get_object('generate', self.master)
         self.pygubu_builder.get_object('start_stimulation', self.master)
+        self.pygubu_builder.get_object('stop_stimulation', self.master)
 
     def on_generate(self):
         self.canvas.delete(self.predator_draw_object)
-        self.predator = self.parent.create_predator(self.color, self.target_diameter, self.scaling_velocity)
+        self.predator = self.parent.create_predator(self.color, self.target_diameter, self.scaling_velocity,
+                                                    self.starting_position)
         drawer = PredatorDrawer(self.predator)
         width, height = self.canvas.winfo_width(), self.canvas.winfo_height()
-
         begin_x, begin_y, end_x, end_y = drawer.calculate_coordinates(width, height, self.target_diameter)
-
-        print(self.target_diameter, self.scaling_velocity)
         self.predator_draw_object = self.canvas.create_oval(begin_x, begin_y, end_x,
                                                             end_y,
                                                             fill=self.color, outline=self.color)
+        self.starting_position = None
 
     def on_background(self):
         new_color = askcolor(color=self.current_background_color, title="Change Background-Color")[1]
@@ -184,6 +202,9 @@ class SingleCanvasTab(TkApplication):
 
     def on_start(self):
         self.parent.start_predator(self.predator, self.id_number)
+
+    def on_stop(self):
+        self.parent.stop_update()
 
     def change_background_color(self, color):
         self.canvas.configure(background=color)
@@ -279,8 +300,9 @@ class PredatorDrawer(object):
 
         return canvas.create_oval(begin_x, begin_y, end_x, end_y, fill=self.predator.color, outline=self.predator.color)
 
-    def calculate_coordinates(self, height, width, current_diameter):  # pragma: no cover
-        begin_x, begin_y = width*self.predator.get_starting_position()[0], height*self.predator.get_starting_position()[1]
+    def calculate_coordinates(self, width, height, current_diameter):  # pragma: no cover
+        begin_x, begin_y = width*self.predator.get_starting_position()[0], \
+                           height*self.predator.get_starting_position()[1]
         end_x, end_y = begin_x+current_diameter*width, begin_y+current_diameter*width
 
         pred_width, pred_height = end_x - begin_x, end_y - begin_y
@@ -290,4 +312,5 @@ class PredatorDrawer(object):
 
         end_x -= pred_width // 2
         end_y -= pred_height // 2
+
         return begin_x, begin_y, end_x, end_y

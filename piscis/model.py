@@ -17,9 +17,9 @@ class TimeTracker(object):
 
 class MovementVector(TimeTracker):
 
-    def __init__(self, start, velocity):
+    def __init__(self, starting_position, velocity):
         TimeTracker.__init__(self)
-        self.starting_position = start
+        self.starting_position = starting_position
         self.angle = float(velocity[0])
         self.magnitude = float(velocity[1])
 
@@ -94,3 +94,7 @@ class Predator(object):
 
     def set_target_diameter(self, value):
         self.scaling_vector.target_diameter = value
+
+    def stop(self):
+        self.set_scaling_velocity(0)
+        self.set_target_diameter(0)
