@@ -20,6 +20,7 @@ class MainWindow(TkApplication):
         self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "main_window.ui"))
 
         self.secondary_window = SecondaryWindow(Toplevel())
+        self.secondary_window.master.withdraw()
 
         self.predator = [None, None, None, None]
         self.current_tab = 0
@@ -130,21 +131,17 @@ class SingleCanvasTab(TkApplication):
         self.current_background_color = BACKGROUND_COLOR
         self.color = PREDATOR_COLOR
 
-        self.scale_value_string = self._create_scale_slider()
-        self.speed_value_string = self._create_speed_slider()
+        self._create_scale_slider()
+        self._create_speed_slider()
         self._create_buttons()
 
         self.pygubu_builder.connect_callbacks(self)
 
     def _create_scale_slider(self):
-        self.pygubu_builder.get_object('scale_label', self.master)
         self.pygubu_builder.get_object('scale_slider', self.master)
-        return self.pygubu_builder.get_object('scale_value', self.master)
 
     def _create_speed_slider(self):
-        self.pygubu_builder.get_object('speed_label', self.master)
         self.pygubu_builder.get_object('speed_slider', self.master)
-        return self.pygubu_builder.get_object('speed_value', self.master)
 
     def _create_buttons(self):
         self.pygubu_builder.get_object('background', self.master)
@@ -160,6 +157,7 @@ class SingleCanvasTab(TkApplication):
 
         begin_x, begin_y, end_x, end_y = drawer.calculate_coordinates(width, height, self.target_diameter)
 
+        print(self.target_diameter, self.scaling_velocity)
         self.predator_draw_object = self.canvas.create_oval(begin_x, begin_y, end_x,
                                                             end_y,
                                                             fill=self.color, outline=self.color)
@@ -175,13 +173,11 @@ class SingleCanvasTab(TkApplication):
             self.predator.color = self.color
 
     def on_scale_slider(self, value):
-        self.scale_value_string.configure(text="%.2f" % float(value))
         self.target_diameter = float(value)
         if self.predator is not None:
             self.predator.set_target_diameter(self.target_diameter)
 
     def on_speed_slider(self, value):
-        self.speed_value_string.configure(text="%.2f" % float(value))
         self.scaling_velocity = float(value)/5
         if self.predator is not None:
             self.predator.set_scaling_velocity(self.scaling_velocity)

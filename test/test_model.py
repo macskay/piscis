@@ -8,9 +8,11 @@ STARTING_EPOCH = 100000000
 CURRENT_EPOCH = 100001414
 
 
+# noinspection PyPep8Naming
 def assertEqualFloat(actual, expected, error_margin=0.5):  # pragma: no cover
     if not abs(actual - expected) <= error_margin:
         raise AssertionError("Actual: %s\nExpected: %s with range of %s" % (actual, expected, error_margin))
+
 
 class TimeTrackerTestCase(TestCase):
     def test_start_movement_saves_current_time(self):
@@ -22,6 +24,7 @@ class TimeTrackerTestCase(TestCase):
         time_tracker = TimeTracker()
         time_tracker.start(STARTING_EPOCH)
         assertEqualFloat(time_tracker.get_delta(CURRENT_EPOCH), sqrt(2))
+
 
 class MovementVectorTestCase(TestCase):
     def setUp(self):
@@ -65,6 +68,7 @@ class ScalingVectorTestCase(TestCase):
         self.vector.start(0)
         self.assertTrue(vector.is_target_diameter_reached(600))
         self.assertFalse(vector.is_target_diameter_reached(100))
+
 
 class PredatorTestCase(TestCase):
     def setUp(self):

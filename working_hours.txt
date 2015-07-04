@@ -86,3 +86,4 @@ Tuesday, 06/30/15 - Wednesday, 07/01/15, 3h, 22 PM - 1 AM
  - Only allowed floats with two decimals for slider-values
  - Added tests to all models
 
+Total: 37h
