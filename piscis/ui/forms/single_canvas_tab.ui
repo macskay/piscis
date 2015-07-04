@@ -83,6 +83,7 @@
           <property name="column">1</property>
           <property name="propagate">True</property>
           <property name="row">2</property>
+          <property name="sticky">n</property>
         </layout>
       </object>
     </child>
@@ -119,6 +120,20 @@
           <property name="column">2</property>
           <property name="propagate">True</property>
           <property name="row">2</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="stop_stimulation">
+        <property name="command">on_stop</property>
+        <property name="text" translatable="yes">Stop Simulation</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="ipadx">0</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+          <property name="rowspan">1</property>
+          <property name="sticky">s</property>
         </layout>
       </object>
     </child>
