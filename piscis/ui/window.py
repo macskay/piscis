@@ -147,7 +147,8 @@ class SingleCanvasTab(TkApplication):
 
         self._create_scale_slider()
         self._create_speed_slider()
-        self._create_buttons()
+        #self._create_buttons()
+        self._create_interval_controls()
 
         self.pygubu_builder.connect_callbacks(self)
 
@@ -167,6 +168,12 @@ class SingleCanvasTab(TkApplication):
         self.pygubu_builder.get_object('generate', self.master)
         self.pygubu_builder.get_object('start_stimulation', self.master)
         self.pygubu_builder.get_object('stop_stimulation', self.master)
+
+    def _create_interval_controls(self):
+        self.pygubu_builder.get_object('pause_seconds', self.master)
+        self.pygubu_builder.get_object('interval_pause_seconds', self.master)
+        self.pygubu_builder.get_object('interval_duration_seconds', self.master)
+        self.pygubu_builder.get_object('duration_seconds', self.master)
 
     def on_generate(self):
         self.canvas.delete(self.predator_draw_object)
@@ -206,10 +213,14 @@ class SingleCanvasTab(TkApplication):
     def on_stop(self):
         self.parent.stop_update()
 
+    def on_duration_change(self):
+        print("Test")
+
     def change_background_color(self, color):
         self.canvas.configure(background=color)
         self.parent.change_background_color_of_all_canvas(color, self.id_number)
         self.current_background_color = color
+
 
 
 class AllCanvasTab(TkApplication):

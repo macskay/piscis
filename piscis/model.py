@@ -94,7 +94,3 @@ class Predator(object):
 
     def set_target_diameter(self, value):
         self.scaling_vector.target_diameter = value
-
-    def stop(self):
-        self.set_scaling_velocity(0)
-        self.set_target_diameter(0)
