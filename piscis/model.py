@@ -68,6 +68,9 @@ class Predator(object):
         self.movement_vector = mv
         self.scaling_vector = sv
 
+        self.persistent_scaling_velocity = 0
+        self.persistent_target_diameter = 0
+
     def start_movement(self, starting_epoch):
         self.movement_vector.start(starting_epoch)
 
@@ -94,7 +97,3 @@ class Predator(object):
 
     def set_target_diameter(self, value):
         self.scaling_vector.target_diameter = value
-
-    def stop(self):
-        self.set_scaling_velocity(0)
-        self.set_target_diameter(0)
