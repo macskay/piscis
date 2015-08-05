@@ -80,7 +80,12 @@ class MainWindow(TkApplication):
         showinfo(PISCIS_TITLE, PISCIS_TITLE + " - " + PISCIS_VERSION + "\n" + PISCIS_CONTACT)
 
     def on_exit(self):
+        self.stop_all_simulations()
         self.master.quit()
+
+    def stop_all_simulations(self):
+        for i, item in enumerate(self.predator):
+            self.tabs[i].on_stop()
 
     def on_fullscreen(self):
         self.secondary_window.set_fullscreen()

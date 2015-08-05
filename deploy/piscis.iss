@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Piscis"
-#define MyAppVersion "1.0"
+#define MyAppVersion "2.0"
 #define MyAppPublisher "mklingmann.com"
 #define MyAppURL "http://www.mpimf-heidelberg.mpg.de/de"
 #define MyAppExeName "Piscis.exe"
@@ -34,7 +34,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked; OnlyBelowVersion: 0,6.1
 
 [Files]
-Source: "C:\Users\Max\Desktop\Piscis\WinPython-64bit-3.4.3.3\python-3.4.3.amd64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs;
+Source: "C:\Users\Max\Documents\GitHub\piscis\deploy\deployment\WinPython\python-3.4.3.amd64\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs;
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\pythonw.exe"; WorkingDir: "{app}"; Parameters: """{app}\Lib\site-packages\piscis\__main__.py"""; IconFilename: "{app}\favicon.ico";   
