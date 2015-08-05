@@ -23,7 +23,7 @@ HORIZONTAL_Y_MARGIN = 0.044
 HORIZONTAL_X_MARGIN = 0.09
 
 PISCIS_TITLE = "Piscis"
-PISCIS_VERSION = "1.0"
+PISCIS_VERSION = "2.0"
 PISCIS_CONTACT = "Contact: soojin.ryu@mpimf-heidelberg.mpg.de"
 
 # noinspection PyAttributeOutsideInit
