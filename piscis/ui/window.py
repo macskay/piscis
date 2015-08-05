@@ -9,7 +9,6 @@ from tkinter.ttk import Style
 from pygubu import TkApplication, Builder
 import time
 from piscis.model import PredatorFactory
-from apscheduler.schedulers.background import BackgroundScheduler
 
 MIN_TO_SEC = 60
 
