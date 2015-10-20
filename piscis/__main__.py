@@ -1,4 +1,4 @@
-#-*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 
 from tkinter import Tk
 from piscis.ui.window import MainWindow, SecondaryWindow

@@ -25,6 +25,7 @@ PISCIS_TITLE = "Piscis"
 PISCIS_VERSION = "2.0"
 PISCIS_CONTACT = "Contact: soojin.ryu@mpimf-heidelberg.mpg.de"
 
+
 # noinspection PyAttributeOutsideInit
 class MainWindow(TkApplication):
     def _create_ui(self):
@@ -96,7 +97,7 @@ class MainWindow(TkApplication):
 
     def create_predator(self, color, target_diameter, scaling_velocity, starting_position=None):
         if starting_position is None:
-            starting_position = random.random(), random.random()
+            starting_position = .5, .5
 
         self.predator_factory.starting_position = starting_position
         self.predator_factory.target_diameter = target_diameter
