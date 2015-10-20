@@ -124,6 +124,13 @@ class PredatorTestCase(TestCase):
         self.pr.get_current_diameter(400000)
         assertEqualFloat(self.pr.scaling_vector.starting_epoch, 120000.)
 
+    def test_old_diameter_accessors(self):
+        self.pr.set_old_diameter(5)
+        self.assertEqual(self.pr.get_old_diameter(), 5)
+
+    def test_target_diameter_accessors(self):
+        self.assertEqual(self.pr.get_target_diameter(), 120)
+
 
 class PredatorFactoryTestCase(TestCase):
     def setUp(self):

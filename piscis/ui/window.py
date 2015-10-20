@@ -457,8 +457,14 @@ class PredatorDrawer(object):
 
     def stop(self):
         self.is_stopped = True
+        self.predator.set_old_diameter(self.predator.get_target_diameter())
+        self.predator.set_target_diameter(0)
 
     def start(self):
+        if self.predator is not None and self.predator.scaling_vector.old_diameter != 0:
+            self.predator.set_target_diameter(self.predator.get_old_diameter())
+            self.predator.set_old_diameter(0)
+            self.predator.old_diameter = 0
         self.is_stopped = False
 
 
