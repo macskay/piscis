@@ -39,6 +39,7 @@ class ScalingVector(TimeTracker):
     def __init__(self, target_diameter, velocity):
         TimeTracker.__init__(self)
         self.target_diameter = target_diameter
+        self.old_diameter = 0
         self.velocity = velocity
 
     def get_current_diameter(self, epoch):
@@ -97,3 +98,12 @@ class Predator(object):
 
     def set_target_diameter(self, value):
         self.scaling_vector.target_diameter = value
+
+    def get_target_diameter(self):
+        return self.scaling_vector.target_diameter
+
+    def set_old_diameter(self, value):
+        self.scaling_vector.old_diameter = value
+
+    def get_old_diameter(self):
+        return self.scaling_vector.old_diameter
