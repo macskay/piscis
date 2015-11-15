@@ -1,5 +1,8 @@
+from logging import getLogger
 from math import pi, cos, sin
 import time
+import sys
+from tkinter import END
 
 DEGREES_45 = pi/4.0
 
@@ -107,3 +110,27 @@ class Predator(object):
 
     def get_old_diameter(self):
         return self.scaling_vector.old_diameter
+
+
+pr_logger = getLogger('ProtocolReader')
+
+
+class ProtocolReader(object):
+    def __init__(self, path, listbox):
+        self.path = path
+        self.listbox = listbox
+
+    def open_file(self):
+        try:
+            return open(self.path, 'r')
+        except FileNotFoundError:
+            return -1
+
+    def read_protocol(self):
+        file = self.open_file()
+        if file != -1:
+            lines = file.readlines()
+            for line in lines:
+                self.listbox.insert(END, line)
+        else:
+            raise FileNotFoundError

@@ -1,12 +1,16 @@
 from math import sqrt
+from os.path import join, dirname, abspath
+from tkinter import Listbox
 from unittest import TestCase
 import time
 from unittest.mock import patch
-from piscis.model import MovementVector, DEGREES_45, ScalingVector, TimeTracker, PredatorFactory, Predator
+from piscis.model import MovementVector, DEGREES_45, ScalingVector, TimeTracker, PredatorFactory, Predator, \
+    ProtocolReader
 
 STARTING_EPOCH = 100000000
 CURRENT_EPOCH = 100001414
 
+FILE_LOCATION = dirname(abspath(__file__))
 
 # noinspection PyPep8Naming
 def assertEqualFloat(actual, expected, error_margin=0.5):  # pragma: no cover
@@ -156,3 +160,22 @@ class PredatorFactoryTestCase(TestCase):
     def test_sets_predator_color(self):
         self.pf.color = "#FF00FF"
         self.assertEqual(self.pf.create().color, "#FF00FF")
+
+
+class ProtocolReaderTestCase(TestCase):
+    def test_when_file_existing_open_returns_file(self):
+        pr = ProtocolReader(join(FILE_LOCATION, "..", "piscis", "resources", "test_protocol.txt"), Listbox())
+        self.assertIsNotNone(pr.open_file())
+
+    def test_when_file_not_found_raise_error(self):
+        pr = ProtocolReader(join(FILE_LOCATION, "..", "piscis", "resources", "invalid.txt"), Listbox())
+        self.assertEqual(pr.open_file(), -1)
+
+    def test_when_file_not_existing_read_protocol_raises_error(self):
+        pr = ProtocolReader(join(FILE_LOCATION, "..", "piscis", "resources", "invalid.txt"), Listbox())
+        self.assertRaises(FileNotFoundError, pr.read_protocol)
+
+    def test_when_file_existing_read_protocol_in_listbox(self):
+        pr = ProtocolReader(join(FILE_LOCATION, "..", "piscis", "resources", "test_protocol.txt"), Listbox())
+        pr.read_protocol()
+        self.assertNotEqual(pr.listbox.size(), 0)

@@ -1,14 +1,12 @@
 from os import path
-import random
-from sched import scheduler
-from threading import Timer
-from tkinter import Toplevel, ALL
+from tkinter import Toplevel, Y, RIGHT
+from tkinter.filedialog import askopenfilename
 from tkinter.colorchooser import askcolor
 from tkinter.messagebox import showinfo
 from tkinter.ttk import Style
 from pygubu import TkApplication, Builder
 import time
-from piscis.model import PredatorFactory
+from piscis.model import PredatorFactory, ProtocolReader
 
 MIN_TO_SEC = 60
 
@@ -33,7 +31,7 @@ class MainWindow(TkApplication):
         self.pygubu_builder.add_from_file(path.join(SCRIPT_DIR, "forms", "main_window.ui"))
 
         self.secondary_window = SecondaryWindow(Toplevel())
-        # self.secondary_window.master.withdraw()
+        self.secondary_window.master.withdraw()
 
         self.predator = [None, None, None, None]
         self.drawer = PredatorDrawer(None)
@@ -81,7 +79,6 @@ class MainWindow(TkApplication):
         showinfo(PISCIS_TITLE, PISCIS_TITLE + " - " + PISCIS_VERSION + "\n" + PISCIS_CONTACT)
 
     def on_exit(self):
-        self.stop_all_simulations()
         self.master.quit()
 
     def stop_all_simulations(self):
@@ -159,16 +156,10 @@ class SingleCanvasTab(TkApplication):
         self.target_diameter = 0
         self.scaling_velocity = 0
 
-        self.remaining_secs_run = 0
-        self.remaining_secs_pause = 0
-
         self.predator = None
         self.predator_draw_object = None
 
         self.starting_position = None
-
-        self.run_timer = None
-        self.pause_timer = None
 
     def _create_ui(self):
         self.pygubu_builder = Builder()
@@ -185,7 +176,6 @@ class SingleCanvasTab(TkApplication):
 
         self._create_scale_slider()
         self._create_speed_slider()
-        self._create_interval_controls()
         self._create_buttons()
 
         self.pygubu_builder.connect_callbacks(self)
@@ -196,29 +186,12 @@ class SingleCanvasTab(TkApplication):
     def _create_speed_slider(self):
         self.pygubu_builder.get_object('speed', self.master)
 
-    def _create_interval_controls(self):
-        self.pygubu_builder.get_object('interval', self.master)
-        self.pygubu_builder.get_object('interval_run', self.master)
-        self.pygubu_builder.get_object('interval_pause', self.master)
-
-        self._create_running_interval_settings()
-        self._create_pausing_interval_settings()
-
-    def _create_pausing_interval_settings(self):
-        self.interval_seconds_pause = self.pygubu_builder.get_object('spin_seconds_pause', self.master)
-        self.interval_minutes_pause = self.pygubu_builder.get_object('spin_minutes_pause', self.master)
-        self.remaining_secs_label_pause = self.pygubu_builder.get_object('remaining_secs_pause', self.master)
-
-    def _create_running_interval_settings(self):
-        self.interval_seconds_run = self.pygubu_builder.get_object('spin_seconds_run', self.master)
-        self.interval_minutes_run = self.pygubu_builder.get_object('spin_minutes_run', self.master)
-        self.remaining_secs_label_run = self.pygubu_builder.get_object('remaining_secs_run', self.master)
-
     def _create_buttons(self):
         self.pygubu_builder.get_object('background', self.master)
         self.pygubu_builder.get_object('stimuli_color', self.master)
         self.pygubu_builder.get_object('generate', self.master)
         self.pygubu_builder.get_object('simulate', self.master)
+        self.pygubu_builder.get_object('command', self.master)
 
     def on_generate(self):
         self.canvas.delete(self.predator_draw_object)
@@ -258,86 +231,9 @@ class SingleCanvasTab(TkApplication):
 
     def on_start(self):
         self.parent.start_predator(self.predator, self.id_number)
-        if self.remaining_secs_run > 0:
-            self.update_pause_remaining_seconds_label()
-            self.start_run_timer()
-
-    def start_run_timer(self):
-        self.run_timer = Timer(1.0, self.reduce_run_remaining_seconds)
-        self.run_timer.start()
-
-    def reduce_run_remaining_seconds(self):
-        self.remaining_secs_run -= 1
-        self.update_run_remaining_seconds_label()
-        if int(self.remaining_secs_run) > 0:
-            self.start_run_timer()
-        else:
-            self.on_stop()
-            self.update_run_remaining_seconds_label()
-            self.set_run_remaining_seconds()
-            self.start_pause_timer()
-
-    def start_pause_timer(self):
-        self.pause_timer = Timer(1.0, self.reduce_pause_remaining_seconds)
-        self.pause_timer.start()
-
-    def reduce_pause_remaining_seconds(self):
-        self.remaining_secs_pause -= 1
-        self.update_pause_remaining_seconds_label()
-        if int(self.remaining_secs_pause) > 0:
-            self.start_pause_timer()
-        else:
-            self.update_pause_remaining_seconds_label()
-            self.set_pause_remaining_seconds()
-            self.on_start()
 
     def on_stop(self):
-        self.stop_pause_timer()
-        self.stop_run_timer()
         self.parent.stop_drawing()
-
-    def stop_pause_timer(self):
-        if self.pause_timer is not None:
-            self.pause_timer.cancel()
-            self.set_pause_remaining_seconds()
-
-    def stop_run_timer(self):
-        if self.run_timer is not None:
-            self.run_timer.cancel()
-            self.set_run_remaining_seconds()
-
-    def on_pause_seconds_changed(self):
-        self.set_pause_remaining_seconds()
-        self.update_pause_remaining_seconds_label()
-
-    def on_pause_minutes_changed(self):
-        self.set_pause_remaining_seconds()
-        self.update_pause_remaining_seconds_label()
-
-    def set_pause_remaining_seconds(self):
-        self.remaining_secs_pause = self.minutes_to_seconds(self.interval_minutes_pause.get()) + int(
-            self.interval_seconds_pause.get())
-
-    def update_pause_remaining_seconds_label(self):
-        self.remaining_secs_label_pause.configure(text=self.remaining_secs_pause)
-
-    def on_run_seconds_changed(self):
-        self.set_run_remaining_seconds()
-        self.update_run_remaining_seconds_label()
-
-    def on_run_minutes_changed(self):
-        self.set_run_remaining_seconds()
-        self.update_run_remaining_seconds_label()
-
-    def set_run_remaining_seconds(self):
-        self.remaining_secs_run = self.minutes_to_seconds(self.interval_minutes_run.get()) + int(
-            self.interval_seconds_run.get())
-
-    def update_run_remaining_seconds_label(self):
-        self.remaining_secs_label_run.configure(text=self.remaining_secs_run)
-
-    def minutes_to_seconds(self, value):
-        return int(value) * MIN_TO_SEC
 
     def change_background_color(self, color):
         self.canvas.configure(background=color)
@@ -347,6 +243,11 @@ class SingleCanvasTab(TkApplication):
     def set_starting_position(self, event):
         self.starting_position = event.x / self.canvas.winfo_width(), event.y / self.canvas.winfo_height()
         self.on_generate()
+
+    def on_open(self):
+        file = askopenfilename(filetypes=[("Piscis protocols", "*.txt")], initialdir=(path.expanduser('~/Desktop')))
+        self.protocol = ProtocolReader(file, self.pygubu_builder.get_object('command_box'))
+        self.protocol.read_protocol()
 
 
 class AllCanvasTab(TkApplication):

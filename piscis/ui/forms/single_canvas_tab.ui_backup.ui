@@ -1,0 +1,354 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface>
+  <object class="ttk.Labelframe" id="root">
+    <property name="height">200</property>
+    <property name="labelanchor">n</property>
+    <property name="relief">sunken</property>
+    <property name="text" translatable="yes">Screen 1</property>
+    <property name="width">200</property>
+    <layout>
+      <property name="column">0</property>
+      <property name="propagate">True</property>
+      <property name="row">0</property>
+      <property name="rowspan">1</property>
+      <rows>
+        <row id="0">
+          <property name="minsize">0</property>
+          <property name="pad">0</property>
+        </row>
+      </rows>
+      <columns>
+        <column id="0">
+          <property name="weight">0</property>
+        </column>
+        <column id="1">
+          <property name="weight">0</property>
+        </column>
+      </columns>
+    </layout>
+    <child>
+      <object class="tk.Canvas" id="canvas">
+        <property name="background">#ff00ff</property>
+        <property name="closeenough">0</property>
+        <property name="confine">false</property>
+        <property name="height">450</property>
+        <property name="width">700</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="columnspan">3</property>
+          <property name="propagate">True</property>
+          <property name="row">1</property>
+          <property name="rowspan">1</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="background">
+        <property name="command">on_background</property>
+        <property name="text" translatable="yes">Background-Color</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="stimuli_color">
+        <property name="command">on_stimuli_color</property>
+        <property name="text" translatable="yes">Stimuli-Color</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Button" id="generate">
+        <property name="command">on_generate</property>
+        <property name="text" translatable="yes">Generate centered Stimuli</property>
+        <property name="width">30</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">0</property>
+          <property name="sticky">e</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="tk.LabelFrame" id="interval">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="padx">0</property>
+          <property name="propagate">True</property>
+          <property name="row">3</property>
+          <property name="sticky">s</property>
+        </layout>
+        <child>
+          <object class="tk.LabelFrame" id="interval_run">
+            <property name="height">50</property>
+            <property name="text" translatable="yes">Interval(Run)</property>
+            <property name="width">100</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">4</property>
+            </layout>
+            <child>
+              <object class="tk.Spinbox" id="spin_seconds_run">
+                <property name="command">on_run_seconds_changed</property>
+                <property name="from_">0</property>
+                <property name="increment">1</property>
+                <property name="to">60</property>
+                <property name="width">2</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Spinbox" id="spin_minutes_run">
+                <property name="command">on_run_minutes_changed</property>
+                <property name="from_">0</property>
+                <property name="increment">1</property>
+                <property name="to">90</property>
+                <property name="width">2</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="minutes_label_run">
+                <property name="text" translatable="yes">Min.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="seconds_label_run">
+                <property name="text" translatable="yes">Sec.</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="remaining_secs_label_run">
+                <property name="text" translatable="yes">Remaining Sec.:</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="remaining_secs_run">
+                <property name="text" translatable="yes">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="tk.LabelFrame" id="interval_pause">
+            <property name="height">50</property>
+            <property name="text" translatable="yes">Interval (Pause)</property>
+            <property name="width">100</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">4</property>
+            </layout>
+            <child>
+              <object class="tk.Spinbox" id="spin_seconds_pause">
+                <property name="command">on_pause_seconds_changed</property>
+                <property name="from_">0</property>
+                <property name="increment">1</property>
+                <property name="to">60</property>
+                <property name="width">2</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Spinbox" id="spin_minutes_pause">
+                <property name="command">on_pause_minutes_changed</property>
+                <property name="from_">0</property>
+                <property name="increment">1</property>
+                <property name="to">90</property>
+                <property name="width">2</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">1</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="minutes_label_pause">
+                <property name="text" translatable="yes">Min.</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="seconds_label_pause">
+                <property name="text" translatable="yes">Sec.</property>
+                <layout>
+                  <property name="column">1</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="remaining_secs_label_pause">
+                <property name="text" translatable="yes">Remaining Sec.:</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="propagate">True</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="remaining_secs_pause">
+                <property name="text" translatable="yes">0</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="propagate">True</property>
+                  <property name="row">3</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="tk.LabelFrame" id="scale">
+        <property name="height">200</property>
+        <property name="text" translatable="yes">Size</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">1</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object class="tk.Scale" id="scale_slider">
+            <property name="command">on_scale_slider</property>
+            <property name="from_">0</property>
+            <property name="length">300</property>
+            <property name="orient">horizontal</property>
+            <property name="resolution">.05</property>
+            <property name="tickinterval">.25</property>
+            <property name="to">1</property>
+            <property name="troughcolor">#8dc09e</property>
+            <layout>
+              <property name="column">1</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="tk.LabelFrame" id="speed">
+        <property name="height">200</property>
+        <property name="text" translatable="yes">Speed</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">3</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object class="tk.Scale" id="speed_slider">
+            <property name="command">on_speed_slider</property>
+            <property name="from_">0</property>
+            <property name="length">300</property>
+            <property name="orient">horizontal</property>
+            <property name="resolution">.05</property>
+            <property name="tickinterval">.25</property>
+            <property name="to">1</property>
+            <property name="troughcolor">#8dc09e</property>
+            <layout>
+              <property name="column">3</property>
+              <property name="propagate">True</property>
+              <property name="row">2</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="tk.LabelFrame" id="simulate">
+        <property name="height">200</property>
+        <property name="text" translatable="yes">Simulation</property>
+        <property name="width">200</property>
+        <layout>
+          <property name="column">2</property>
+          <property name="propagate">True</property>
+          <property name="row">2</property>
+        </layout>
+        <child>
+          <object class="ttk.Button" id="start_stimulation">
+            <property name="command">on_start</property>
+            <property name="text" translatable="yes">Start Simulation</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="propagate">True</property>
+              <property name="row">0</property>
+              <property name="sticky">n</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="stop_stimulation">
+            <property name="command">on_stop</property>
+            <property name="text" translatable="yes">Stop Simulation</property>
+            <layout>
+              <property name="column">0</property>
+              <property name="ipadx">0</property>
+              <property name="propagate">True</property>
+              <property name="row">1</property>
+              <property name="rowspan">1</property>
+              <property name="sticky">s</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
