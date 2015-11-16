@@ -11,6 +11,12 @@
       <property name="propagate">True</property>
       <property name="row">0</property>
       <property name="rowspan">1</property>
+      <rows>
+        <row id="0">
+          <property name="minsize">0</property>
+          <property name="pad">0</property>
+        </row>
+      </rows>
       <columns>
         <column id="0">
           <property name="weight">0</property>
@@ -19,12 +25,6 @@
           <property name="weight">0</property>
         </column>
       </columns>
-      <rows>
-        <row id="0">
-          <property name="minsize">0</property>
-          <property name="pad">0</property>
-        </row>
-      </rows>
     </layout>
     <child>
       <object class="tk.Canvas" id="canvas">
@@ -184,19 +184,6 @@
           <property name="row">3</property>
         </layout>
         <child>
-          <object class="tk.Listbox" id="command_box">
-            <property name="width">34</property>
-            <property name="yscrollcommand">scrollbar.set</property>
-            <layout>
-              <property name="column">0</property>
-              <property name="columnspan">1</property>
-              <property name="propagate">True</property>
-              <property name="row">0</property>
-              <property name="sticky">w</property>
-            </layout>
-          </object>
-        </child>
-        <child>
           <object class="ttk.Button" id="open">
             <property name="command">on_open</property>
             <property name="text" translatable="yes">Open Protocol...</property>
@@ -209,17 +196,23 @@
           </object>
         </child>
         <child>
-          <object class="tk.Scrollbar" id="scrollbar">
-            <property name="command">command_box.yview</property>
-            <property name="jump">true</property>
-            <property name="orient">vertical</property>
+          <object class="pygubu.builder.widgets.tkscrollbarhelper" id="scrollbar">
+            <property name="scrolltype">both</property>
             <layout>
               <property name="column">0</property>
-              <property name="ipady">57</property>
               <property name="propagate">True</property>
-              <property name="row">0</property>
-              <property name="sticky">ne</property>
+              <property name="row">2</property>
             </layout>
+            <child>
+              <object class="tk.Listbox" id="command_box">
+                <property name="width">45</property>
+                <layout>
+                  <property name="column">0</property>
+                  <property name="propagate">True</property>
+                  <property name="row">0</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
       </object>
